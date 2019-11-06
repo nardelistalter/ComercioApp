@@ -28,7 +28,7 @@ public class FactoryManager {
     
     private FactoryManager() {
         emf = Persistence.createEntityManagerFactory("ComercioMySQLPU");
-        //emf = Persistence.createEntityManagerFactory("ComercioPostgreSQLPU");        
+        //emf = Persistence.createEntityManagerFactory("ComercioPostgreSQLPU");       
     }
     
     public static FactoryManager getInstance() {
