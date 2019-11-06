@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author pavan
  */
 public class Valida {
-    public static boolean acesso(HttpServletRequest req,
+    public static Permissao acesso(HttpServletRequest req,
                                  HttpServletResponse res,
                                  String programa) {
         System.out.println(req.getSession().getAttribute("func"));
@@ -28,15 +28,16 @@ public class Valida {
             EntityManager em = FactoryManager.getInstance().getEm();
             System.out.println("f: "+f);
             System.out.println("cat: "+f.getCategoria());
-            Query q = em.createQuery("FROM Permissao p WHERE p.programa.nome = :programa and p.categoriaFuncional.id = :cat");
+            Query q = em.createQuery("FROM Permissao p WHERE "
+                    + "p.programa.nome = :programa and "
+                    + "p.categoriaFuncional.id = :cat");
             q.setParameter("programa", programa);
             q.setParameter("cat", f.getCategoria().getId());
-            List<Permissao> list = q.getResultList();
-            for(Permissao p: list) {
-                System.out.println("p: "+p);
+            try {
+                return (Permissao) q.getSingleResult();
+            } catch (Exception e) {
             }
-            return true;            
         }
-        return false;
+        return null;
     }
 }

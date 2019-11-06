@@ -1,12 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html>
-    <head>
-        <link rel="stylesheet" href="../css/bootstrap.min.css">   		
-        <script src="../js/bootstrap.min.js"></script>       
-    </head>
-
-    <body>    
-        <%@include file="menu.jspf" %>
+<%@include file="../header.jspf" %>
         <div class="container">
             <h2>Cidade</h2>
             <!--Search Form -->
@@ -74,5 +67,4 @@
                 <button type="submit" class="btn btn-primary  btn-md">Novo</button> 
             </form>
         </div>
-    </body>
-</html>
+<%@include file="../footer.jspf" %>

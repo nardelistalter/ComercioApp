@@ -7,6 +7,7 @@ package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
 import br.upf.ads.paw.entidades.Estado;
+import br.upf.ads.paw.entidades.Permissao;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,13 +41,15 @@ public class EstadoServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
-
-        if (!Valida.acesso(req, resp, "Estado")) {
+        Permissao p = Valida.acesso(req, resp, "Estado");
+        if (p == null) {
+            req.setAttribute("message", "Acesso negado. Tente fazer login.");
             RequestDispatcher dispatcher
                     = getServletContext().
                             getRequestDispatcher("/login?url=/estado");
             dispatcher.forward(req, resp);
         } else {
+            req.setAttribute("permissao", p);
             String action = req.getParameter("searchAction");
             if (action != null) {
                 switch (action) {
@@ -54,11 +57,21 @@ public class EstadoServletController extends HttpServlet {
                         searchById(req, resp);
                         break;
                     case "searchByName":
-                        searchByName(req, resp);
+                        if (p.getConsultar()) {
+                            searchByName(req, resp);
+                        } else {
+                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                        }
+                        forwardList(req, resp, null);                        
                         break;
                 }
             } else {
-                List<Estado> result = dao.findEntities();
+                List<Estado> result = null;
+                if (p.getConsultar()) {
+                    result = dao.findEntities();
+                } else {
+                    req.setAttribute("message", "Você não tem permissão para consultar.");
+                }
                 forwardList(req, resp, result);
             }
         }

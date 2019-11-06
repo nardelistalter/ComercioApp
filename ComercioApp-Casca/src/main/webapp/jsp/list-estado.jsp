@@ -38,16 +38,23 @@
                     <c:forEach var="obj" items="${entities}">
                         <tr class="${id == obj.id?"info":""}">
                             <td>
-                                <a href="/estado?id=${obj.id}&searchAction=searchById">${obj.id}</a>
+                                <c:if test="${permissao.getAlterar()}">
+                                    <a href="/estado?id=${obj.id}&searchAction=searchById">${obj.id}</a>
+                                </c:if>
+                                <c:if test="${!permissao.getAlterar()}">
+                                    ${obj.id}
+                                </c:if>
                             </td>                                    
                             <td>${obj.nome}</td>
                             <td>${obj.uf}</td> 
-                            <td><a href="#" id="remove" 
-                                   onclick="document.getElementById('action').value = 'remove';document.getElementById('id').value = '${obj.id}';
-                                                   document.getElementById('estadoForm').submit();"> 
-                                    <span class="glyphicon glyphicon-trash"/>
-                                </a>
-
+                            <td>
+                                <c:if test="${permissao.getExcluir()}">
+                                    <a href="#" id="remove" 
+                                       onclick="document.getElementById('action').value = 'remove';document.getElementById('id').value = '${obj.id}';
+                                               document.getElementById('estadoForm').submit();"> 
+                                        <span class="glyphicon glyphicon-trash"/>
+                                    </a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>               
@@ -63,7 +70,9 @@
     </form>
     <form action ="jsp/form-estado.jsp">            
         <br></br>
-        <button type="submit" class="btn btn-primary  btn-md">Novo Estado</button> 
+        <c:if test="${permissao.getCriar()}">
+            <button type="submit" class="btn btn-primary  btn-md">Novo Estado</button> 
+        </c:if>
     </form>
 </div>
 

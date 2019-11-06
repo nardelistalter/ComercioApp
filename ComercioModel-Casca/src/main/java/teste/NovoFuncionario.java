@@ -32,8 +32,8 @@ public class NovoFuncionario {
         cf = (CategoriaFuncional) JOptionPane.showInputDialog(null, 
                 "Escolha a Categoria Funcional", "Categoria Funcional", 
                 JOptionPane.QUESTION_MESSAGE, null, daoCF.findEntities().toArray(), null);
-        f = new Funcionario(new Date(), null, "ctps 555", 50542D, "rafael", "bolinhas", 
-                cf, "454545", "3333", 'M', new Date("07/04/1971"), 
+        f = new Funcionario(new Date(), null, "ctps est", 50542D, "laercio", "bolinhas", 
+                cf, "444", "444", 'M', new Date("07/04/1971"), 
                 null, "Rafael Pavan", "BR 285", "192", "Campus I", 
                 "São José", "pavan@upf.br", "(54) 3316-8354", "99052-900", c);
         try {

@@ -1,11 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html>
-    <head>
-        <link rel="stylesheet" href="../css/bootstrap.min.css">   		
-        <script src="../js/bootstrap.min.js"></script>     
-    </head>
-    <body>
-        <%@include file="menu.jspf" %>
+<%@include file="../header.jspf" %>
         <div class="container">
             <form action="/cidade" method="post"  role="form" data-toggle="validator" >
                 <c:if test ="${empty action}">                        	
@@ -28,5 +22,4 @@
                 </div>                                                      
             </form>
         </div>
-    </body>
-</html>
+<%@include file="../footer.jspf" %>
