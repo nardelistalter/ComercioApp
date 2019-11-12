@@ -11,8 +11,10 @@
         <div class="form-group col-xs-4">
             <label for="nome" class="control-label col-xs-4">Nome:</label>
             <input type="text" name="nome" id="nome" class="form-control" value="${obj.nome}" required="true"/>                                   
+
             <label for="uf" class="control-label col-xs-4">UF:</label>                   
             <input type="text" name="uf" id="uf" class="form-control" value="${obj.uf}" required="true" maxlength="2"/> 
+
             <br></br>
             <button type="submit" class="btn btn-primary  btn-md">Gravar</button> 
         </div>                                                      
