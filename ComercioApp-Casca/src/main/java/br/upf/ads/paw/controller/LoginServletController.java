@@ -3,9 +3,6 @@ package br.upf.ads.paw.controller;
 import br.upf.ads.paw.controladores.GenericDao;
 import br.upf.ads.paw.entidades.Funcionario;
 import java.io.IOException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.Query;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,7 +34,7 @@ public class LoginServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         //req.getSession().removeAttribute("func");
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/form-login.jsp?url="+req.getParameter("url"));
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/form-login.jsp?url=" + req.getParameter("url"));
         dispatcher.forward(req, resp);
     }
 
@@ -54,11 +51,11 @@ public class LoginServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         req.getSession().removeAttribute("func");
-        String url = req.getParameter("url");        
+        String url = req.getParameter("url");
         String login = req.getParameter("login");
         String senha = req.getParameter("senha");
-        String forward = "/jsp/form-login.jsp?url="+url;
-        if(login!=null && senha !=null) {
+        String forward = "/jsp/form-login.jsp?url=" + url;
+        if (login != null && senha != null) {
             String select = "FROM Funcionario f WHERE f.login=:login and f.senha=:senha";
             Query q = dao.getEntityManager().createQuery(select);
             q.setParameter("login", login);
@@ -73,7 +70,7 @@ public class LoginServletController extends HttpServlet {
         } else {
             req.setAttribute("message", "Você precisa fazer login para acessar este serviço.");
         }
-        System.out.println("forward: "+forward);
+        System.out.println("forward: " + forward);
         resp.sendRedirect(forward);
 //        RequestDispatcher dispatcher = getServletContext().
 //                getRequestDispatcher(forward);

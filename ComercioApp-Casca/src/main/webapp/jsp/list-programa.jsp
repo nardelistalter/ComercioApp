@@ -7,7 +7,7 @@
     <form action="/programa" method="get" id="searchProgramaForm" role="form">
         <input type="hidden" id="searchAction" name="searchAction" value="searchByName">
         <div class="form-group col-xs-5">
-            <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite a descrição do programa a procurar"/>                    
+            <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite a descriï¿½ï¿½o do programa a procurar"/>                    
         </div>
         <button type="submit" class="btn btn-info">
             <span class="glyphicon glyphicon-search"></span> Procurar
