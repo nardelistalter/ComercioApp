@@ -23,7 +23,7 @@ public class Valida {
                                  HttpServletResponse res,
                                  String programa) {
         System.out.println(req.getSession().getAttribute("func"));
-        if(req.getSession().getAttribute("func")!=null) {
+        if (req.getSession().getAttribute("func") != null) {
             Funcionario f = (Funcionario) req.getSession().getAttribute("func");
             EntityManager em = FactoryManager.getInstance().getEm();
             System.out.println("f: "+f);

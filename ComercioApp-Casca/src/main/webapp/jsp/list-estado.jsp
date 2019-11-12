@@ -75,6 +75,5 @@
         </c:if>
     </form>
 </div>
-
 <%@include file="../footer.jspf" %>
 

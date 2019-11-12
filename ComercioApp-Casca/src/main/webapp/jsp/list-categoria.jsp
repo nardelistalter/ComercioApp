@@ -1,5 +1,4 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <%@include file="../header.jspf" %>
 <div class="container">
     <h2>Categorias</h2>
@@ -65,5 +64,4 @@
         <button type="submit" class="btn btn-primary  btn-md">Novo</button> 
     </form>
 </div>
-
 <%@include file="../footer.jspf" %>

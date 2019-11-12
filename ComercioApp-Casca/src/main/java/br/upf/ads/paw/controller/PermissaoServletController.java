@@ -146,6 +146,10 @@ public class PermissaoServletController extends HttpServlet {
             Boolean criar = req.getParameter("criar") != null;
             Boolean excluir = req.getParameter("excluir") != null;
             Boolean consultar = req.getParameter("consultar") != null;
+            //Se Alterar e ou Excluir forem permitidos, automaticamente o usuário deverá ter acesso a Consulta
+            if (alterar || excluir) {
+                consultar = true;
+            }
 
             Permissao obj = new Permissao(null, alterar, criar, excluir, consultar, daoPrograma.findEntity(idPrograma), daoCategoriaFuncional.findEntity(idCFuncional));
             daoPermissao.create(obj);
@@ -169,6 +173,10 @@ public class PermissaoServletController extends HttpServlet {
         Boolean criar = req.getParameter("criar") != null;
         Boolean excluir = req.getParameter("excluir") != null;
         Boolean consultar = req.getParameter("consultar") != null;
+        //Se Alterar e ou Excluir forem permitidos, automaticamente o usuário deverá ter acesso a Consulta
+        if (alterar || excluir) {
+            consultar = true;
+        }
 
         Permissao obj = new Permissao(id, alterar, criar, excluir, consultar, daoPrograma.findEntity(idPrograma), daoCategoriaFuncional.findEntity(idCFuncional));
         boolean success = false;
