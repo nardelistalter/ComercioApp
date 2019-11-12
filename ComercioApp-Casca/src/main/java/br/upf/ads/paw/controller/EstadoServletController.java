@@ -60,7 +60,7 @@ public class EstadoServletController extends HttpServlet {
                         if (p.getConsultar()) {
                             searchByName(req, resp);
                         } else {
-                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                            req.setAttribute("message", "VocÃª nÃ£o tem permissÃ£o para consultar.");
                         }
                         forwardList(req, resp, null);                        
                         break;
@@ -70,7 +70,7 @@ public class EstadoServletController extends HttpServlet {
                 if (p.getConsultar()) {
                     result = dao.findEntities();
                 } else {
-                    req.setAttribute("message", "Você não tem permissão para consultar.");
+                    req.setAttribute("message", "VocÃª nÃ£o tem permissÃ£o para consultar.");
                 }
                 forwardList(req, resp, result);
             }

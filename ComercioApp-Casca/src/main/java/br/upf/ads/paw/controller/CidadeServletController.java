@@ -42,7 +42,8 @@ public class CidadeServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
-        if (!Valida.acesso(req, resp, "Cidade")) {
+        // TODO - Arrumar o módulo de permissões
+        if (true) {
             RequestDispatcher dispatcher
                     = getServletContext().
                             getRequestDispatcher("/login?url=/cidade");
