@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "ProgramaServletController", urlPatterns = {"/programa"})
 public class ProgramaServletController extends HttpServlet {
-// Comentario de teste
+
     GenericDao<Programa> dao = new GenericDao(Programa.class);
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
