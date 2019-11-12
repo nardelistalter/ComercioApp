@@ -8,6 +8,7 @@ package br.upf.ads.paw.controller;
 import br.upf.ads.paw.controladores.GenericDao;
 import br.upf.ads.paw.entidades.Cidade;
 import br.upf.ads.paw.entidades.Estado;
+import br.upf.ads.paw.entidades.Permissao;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -43,7 +44,8 @@ public class CidadeServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         // TODO - Arrumar o mÃ³dulo de permissÃµes
-        if (true) {
+        Permissao p = Valida.acesso(req, resp, "Cidade");
+        if (p == null) {
             RequestDispatcher dispatcher
                     = getServletContext().
                             getRequestDispatcher("/login?url=/cidade");
@@ -56,11 +58,21 @@ public class CidadeServletController extends HttpServlet {
                         searchById(req, resp);
                         break;
                     case "search":
-                        search(req, resp);
+                        if (p.getConsultar()) {
+                            search(req, resp);
+                        } else {
+                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                        }
+                        forwardList(req, resp, null);                        
                         break;
                 }
             } else {
-                List<Cidade> result = daoCidade.findEntities();
+                List<Cidade> result = null;
+                if (p.getConsultar()) {
+                    result = daoCidade.findEntities();
+                } else {
+                    req.setAttribute("message", "Você não tem permissão para consultar.");
+                }
                 forwardList(req, resp, result);
             }
         }
@@ -112,6 +124,7 @@ public class CidadeServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
+        if(action==null) doGet(req, resp);
         switch (action) {
             case "new":
                 newAction(req, resp);
