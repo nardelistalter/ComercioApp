@@ -114,6 +114,7 @@ public class FuncionarioServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
+        if(action==null) doGet(req, resp);
         switch (action) {
             case "new":
                 newAction(req, resp);

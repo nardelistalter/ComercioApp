@@ -101,6 +101,7 @@ public class FormaPagamentoServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
+        if(action==null) doGet(req, resp);
         switch (action) {
             case "add":
                 addAction(req, resp);
