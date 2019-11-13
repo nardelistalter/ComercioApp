@@ -6,7 +6,7 @@
     <form action="/cidade" method="get" id="searchCidade" role="form">
         <input type="hidden" id="action" name="action" value="search">
         <div class="form-group col-xs-5">
-            <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite a descriï¿½ï¿½o da cidade a procurar"/>                    
+            <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite a descrição da cidade a procurar"/>                    
         </div>
         <button type="submit" class="btn btn-info">
             <span class="glyphicon glyphicon-search"></span> Procurar
@@ -15,7 +15,6 @@
         <br></br>
     </form>
 
-    <
     <!-- List-->
     <c:if test="${not empty message}">                
         <div class="alert alert-success">
@@ -39,16 +38,23 @@
                     <c:forEach var="obj" items="${entities}">
                         <tr class="${id == obj.id?"info":""}">
                             <td>
-                                <a href="/cidade?id=${obj.id}&action=searchById">${obj.id}</a>
+                                <c:if test="${permissao.getAlterar()}">
+                                    <a href="/cidade?id=${obj.id}&search=searchById">${obj.id}</a>
+                                </c:if>
+                                <c:if test="${!permissao.getAlterar()}">
+                                    ${obj.id}
+                                </c:if>
                             </td>                                    
                             <td>${obj.nome}</td>
                             <td>${obj.estado}</td>
-                            <td><a href="#" id="remove" 
-                                   onclick="document.getElementById('action').value = 'remove';
-                                           document.getElementById('id').value = '${obj.id}';
-                                           document.getElementById('cidadeForm').submit();"> 
-                                    <span class="glyphicon glyphicon-trash"/>
-                                </a>
+                            <td> <td>
+                                <c:if test="${permissao.getExcluir()}">
+                                    <a href="#" id="remove" 
+                                       onclick="document.getElementById('action').value = 'remove';document.getElementById('id').value = '${obj.id}';
+                                               document.getElementById('cidadeForm').submit();"> 
+                                        <span class="glyphicon glyphicon-trash"/>
+                                    </a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>               
@@ -64,7 +70,9 @@
     </form>
     <form action ="/cidade?action=new" method="POST">            
         <br></br>
-        <button type="submit" class="btn btn-primary  btn-md">Novo</button> 
+        <c:if test="${permissao.getCriar()}">
+            <button type="submit" class="btn btn-primary  btn-md">Nova Cidade</button> 
+        </c:if>   
     </form>
 </div>
 <%@include file="../footer.jspf" %>

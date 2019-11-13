@@ -8,6 +8,7 @@ package br.upf.ads.paw.controller;
 import br.upf.ads.paw.controladores.GenericDao;
 import br.upf.ads.paw.entidades.Cidade;
 import br.upf.ads.paw.entidades.Estado;
+import br.upf.ads.paw.entidades.Permissao;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -42,26 +43,37 @@ public class CidadeServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
-        // TODO - Arrumar o mÃ³dulo de permissÃµes
-        if (true) {
+
+        Permissao p = Valida.acesso(req, resp, "Cidade");
+        if (p == null) {
             RequestDispatcher dispatcher
                     = getServletContext().
                             getRequestDispatcher("/login?url=/cidade");
             dispatcher.forward(req, resp);
         } else {
-            String action = req.getParameter("action");
+            req.setAttribute("permissao", p);
+            String action = req.getParameter("search");
             if (action != null) {
                 switch (action) {
                     case "searchById":
                         searchById(req, resp);
                         break;
                     case "search":
-                        search(req, resp);
+                        if (p.getConsultar()) {
+                            search(req, resp);
+                        } else {
+                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                        }
+                        forwardList(req, resp, null);
                         break;
                 }
             } else {
-                List<Cidade> result = daoCidade.findEntities();
-                forwardList(req, resp, result);
+                List<Cidade> result = null;
+                if (p.getConsultar()) {
+                    result = daoCidade.findEntities();
+                } else {
+                    req.setAttribute("message", "Você não tem permissão para consultar.");
+                }                forwardList(req, resp, result);
             }
         }
     }
