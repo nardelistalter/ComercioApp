@@ -51,7 +51,8 @@ public class CidadeServletController extends HttpServlet {
                             getRequestDispatcher("/login?url=/cidade");
             dispatcher.forward(req, resp);
         } else {
-            String action = req.getParameter("action");
+            req.setAttribute("permissao", p);
+            String action = req.getParameter("search");
             if (action != null) {
                 switch (action) {
                     case "searchById":
