@@ -145,11 +145,10 @@ public class EstadoServletController extends HttpServlet {
             Estado obj = new Estado(null, nome, uf);
             dao.create(obj);
             long id = obj.getId();
-            List<Estado> objList = dao.findEntities();
             req.setAttribute("id", id);
             String message = "O novo estado foi criado com sucesso.";
             req.setAttribute("message", message);
-            forwardList(req, resp, objList);
+            doGet(req, resp);
         } catch (Exception ex) {
             Logger.getLogger(EstadoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -171,10 +170,9 @@ public class EstadoServletController extends HttpServlet {
         if (success) {
             message = "O estado foi atualizado com sucesso";
         }
-        List<Estado> objList = dao.findEntities();
         req.setAttribute("id", obj.getId());
         req.setAttribute("message", message);
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     private void removeById(HttpServletRequest req, HttpServletResponse resp)
@@ -191,8 +189,7 @@ public class EstadoServletController extends HttpServlet {
             String message = "O estado foi removido com sucesso.";
             req.setAttribute("message", message);
         }
-        List<Estado> objList = dao.findEntities();
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     /**
