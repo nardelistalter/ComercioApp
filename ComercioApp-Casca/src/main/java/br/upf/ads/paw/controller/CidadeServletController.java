@@ -161,11 +161,10 @@ public class CidadeServletController extends HttpServlet {
             Cidade obj = new Cidade(null, nome, daoEstado.findEntity(idEstado));
             daoCidade.create(obj);
             long id = obj.getId();
-            List<Cidade> objList = daoCidade.findEntities();
             req.setAttribute("id", id);
             String message = "Um novo registro foi criado com sucesso.";
             req.setAttribute("message", message);
-            forwardList(req, resp, objList);
+            doGet(req, resp);
         } catch (Exception ex) {
             Logger.getLogger(CidadeServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -188,10 +187,9 @@ public class CidadeServletController extends HttpServlet {
         if (success) {
             message = "O registro foi atualizado com sucesso";
         }
-        List<Cidade> objList = daoCidade.findEntities();
         req.setAttribute("id", obj.getId());
         req.setAttribute("message", message);
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     private void removeById(HttpServletRequest req, HttpServletResponse resp)
@@ -199,7 +197,9 @@ public class CidadeServletController extends HttpServlet {
         long id = Integer.valueOf(req.getParameter("id"));
         boolean confirm = false;
         try {
+            System.out.println("Destruindo");
             daoCidade.destroy(id);
+            System.out.println("Destruido");
             confirm = true;
         } catch (Exception ex) {
             Logger.getLogger(CidadeServletController.class.getName()).log(Level.SEVERE, null, ex);
@@ -208,8 +208,7 @@ public class CidadeServletController extends HttpServlet {
             String message = "O registro foi removido com sucesso.";
             req.setAttribute("message", message);
         }
-        List<Cidade> objList = daoCidade.findEntities();
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     /**
