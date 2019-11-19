@@ -7,6 +7,7 @@ package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
 import br.upf.ads.paw.entidades.FormaPagamento;
+import br.upf.ads.paw.entidades.Permissao;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "FormaPagamentoServletController", urlPatterns = {"/formaPagamento"})
 public class FormaPagamentoServletController extends HttpServlet {
 
-    GenericDao<FormaPagamento> dao = new GenericDao(FormaPagamento.class);
+    GenericDao<FormaPagamento> daoFormaPagamento = new GenericDao(FormaPagamento.class);
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -40,19 +41,37 @@ public class FormaPagamentoServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
-        String action = req.getParameter("searchAction");
-        if (action != null) {
-            switch (action) {
-                case "searchById":
-                    searchById(req, resp);
-                    break;
-                case "searchByName":
-                    searchByName(req, resp);
-                    break;
-            }
+
+        Permissao p = Valida.acesso(req, resp, "Forma Pagamento");
+        if (p == null) {
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login?url=/formaPagamento");
+            dispatcher.forward(req, resp);
         } else {
-            List<FormaPagamento> result = dao.findEntities();
-            forwardList(req, resp, result);
+            req.setAttribute("permissao", p);
+            String action = req.getParameter("searchAction");
+            if (action != null) {
+                switch (action) {
+                    case "searchById":
+                        searchById(req, resp);
+                        break;
+                    case "searchByName":
+                        if (p.getConsultar()) {
+                            searchByName(req, resp);
+                        } else {
+                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                        }
+                        forwardList(req, resp, null);
+                        break;
+                }
+            } else {
+                List<FormaPagamento> result = null;
+                if (p.getConsultar()) {
+                    result = daoFormaPagamento.findEntities();
+                } else {
+                    req.setAttribute("message", "Você não tem permissão para consulrar");
+                }
+                forwardList(req, resp, result);
+            }
         }
     }
 
@@ -62,7 +81,7 @@ public class FormaPagamentoServletController extends HttpServlet {
         long id = Integer.valueOf(req.getParameter("id"));
         FormaPagamento obj = null;
         try {
-            obj = dao.findEntity(id);
+            obj = daoFormaPagamento.findEntity(id);
         } catch (Exception ex) {
             Logger.getLogger(FormaPagamentoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -76,7 +95,7 @@ public class FormaPagamentoServletController extends HttpServlet {
     private void searchByName(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String search = req.getParameter("search");
-        List<FormaPagamento> result = dao.findEntitiesByField("descricao", search);  // buscar por nome
+        List<FormaPagamento> result = daoFormaPagamento.findEntitiesByField("descricao", search);  // buscar por nome
         forwardList(req, resp, result);
     }
 
@@ -120,9 +139,9 @@ public class FormaPagamentoServletController extends HttpServlet {
             String descricao = req.getParameter("descricao");
 
             FormaPagamento obj = new FormaPagamento(null, descricao);
-            dao.create(obj);
+            daoFormaPagamento.create(obj);
             long id = obj.getId();
-            List<FormaPagamento> objList = dao.findEntities();
+            List<FormaPagamento> objList = daoFormaPagamento.findEntities();
             req.setAttribute("id", id);
             String message = "Um novo registro foi criado com sucesso.";
             req.setAttribute("message", message);
@@ -138,7 +157,7 @@ public class FormaPagamentoServletController extends HttpServlet {
         FormaPagamento obj = new FormaPagamento(id, descricao);
         boolean success = false;
         try {
-            dao.edit(obj);
+            daoFormaPagamento.edit(obj);
             success = true;
         } catch (Exception ex) {
             Logger.getLogger(FormaPagamentoServletController.class.getName()).log(Level.SEVERE, null, ex);
@@ -147,7 +166,7 @@ public class FormaPagamentoServletController extends HttpServlet {
         if (success) {
             message = "O registro foi atualizado com sucesso";
         }
-        List<FormaPagamento> objList = dao.findEntities();
+        List<FormaPagamento> objList = daoFormaPagamento.findEntities();
         req.setAttribute("id", obj.getId());
         req.setAttribute("message", message);
         forwardList(req, resp, objList);
@@ -158,7 +177,7 @@ public class FormaPagamentoServletController extends HttpServlet {
         long id = Integer.valueOf(req.getParameter("id"));
         boolean confirm = false;
         try {
-            dao.destroy(id);
+            daoFormaPagamento.destroy(id);
             confirm = true;
         } catch (Exception ex) {
             Logger.getLogger(FormaPagamentoServletController.class.getName()).log(Level.SEVERE, null, ex);
@@ -167,7 +186,7 @@ public class FormaPagamentoServletController extends HttpServlet {
             String message = "O registro foi removido com sucesso.";
             req.setAttribute("message", message);
         }
-        List<FormaPagamento> objList = dao.findEntities();
+        List<FormaPagamento> objList = daoFormaPagamento.findEntities();
         forwardList(req, resp, objList);
     }
 

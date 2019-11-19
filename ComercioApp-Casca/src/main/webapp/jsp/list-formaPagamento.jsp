@@ -37,15 +37,22 @@
                     <c:forEach var="obj" items="${entities}">
                         <tr class="${id == obj.id?"info":""}">
                             <td>
-                                <a href="/formaPagamento?id=${obj.id}&searchAction=searchById">${obj.id}</a>
+                                <c:if test="${permissao.getAlterar()}">
+                                    <a href="/formaPagamento?id=${obj.id}&searchAction=searchById">${obj.id}</a>
+                                </c:if>
+                                <c:if test="${!permissao.getAlterar()}">
+                                    ${obj.id}
+                                </c:if>
                             </td>                                    
                             <td>${obj.descricao}</td>
-                            <td><a href="#" id="remove" 
-                                   onclick="document.getElementById('action').value = 'remove';document.getElementById('id').value = '${obj.id}';
-                                           document.getElementById('formaPagamentoForm').submit();"> 
-                                    <span class="glyphicon glyphicon-trash"/>
-                                </a>
-
+                            <td> <td> 
+                                <c:if test="${permissao.getExcluir()}">
+                                    <a href="#" id="remove" 
+                                       onclick="document.getElementById('action').value = 'remove';document.getElementById('id').value = '${obj.id}';
+                                               document.getElementById('formaPagamentoForm').submit();"> 
+                                        <span class="glyphicon glyphicon-trash"/>
+                                    </a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>               
@@ -61,7 +68,9 @@
     </form>
     <form action ="jsp/form-formaPagamento.jsp">            
         <br></br>
-        <button type="submit" class="btn btn-primary  btn-md">Novo</button> 
+        <c:if test="${permissao.getCriar()}">
+            <button type="submit" class="btn btn-primary  btn-md">Novo</button> 
+        </c:if>
     </form>
 </div>
 <%@include file="../footer.jspf" %>
