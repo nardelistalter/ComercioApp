@@ -43,7 +43,7 @@ public class CidadeServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
-
+        // TODO - Arrumar o mÃ³dulo de permissÃµes
         Permissao p = Valida.acesso(req, resp, "Cidade");
         if (p == null) {
             RequestDispatcher dispatcher
@@ -64,7 +64,7 @@ public class CidadeServletController extends HttpServlet {
                         } else {
                             req.setAttribute("message", "Você não tem permissão para consultar.");
                         }
-                        forwardList(req, resp, null);
+                        forwardList(req, resp, null);                        
                         break;
                 }
             } else {
@@ -73,7 +73,8 @@ public class CidadeServletController extends HttpServlet {
                     result = daoCidade.findEntities();
                 } else {
                     req.setAttribute("message", "Você não tem permissão para consultar.");
-                }                forwardList(req, resp, result);
+                }
+                forwardList(req, resp, result);
             }
         }
     }
@@ -124,6 +125,7 @@ public class CidadeServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
+        if(action==null) doGet(req, resp);
         switch (action) {
             case "new":
                 newAction(req, resp);

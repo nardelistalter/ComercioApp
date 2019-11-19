@@ -9,6 +9,7 @@ import br.upf.ads.paw.controladores.GenericDao;
 import br.upf.ads.paw.entidades.CategoriaFuncional;
 import br.upf.ads.paw.entidades.Funcionario;
 import br.upf.ads.paw.entidades.Cidade;
+import br.upf.ads.paw.entidades.Permissao;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,7 +48,8 @@ public class FuncionarioServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         // TODO - Arrumar o módulo de permissões
-        if (true) {
+        Permissao p = Valida.acesso(req, resp, "Funcionario");
+        if (p == null) {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login?url=/funcionario");
             dispatcher.forward(req, resp);
         } else {
@@ -114,6 +116,7 @@ public class FuncionarioServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
+        if(action==null) doGet(req, resp);
         switch (action) {
             case "new":
                 newAction(req, resp);
