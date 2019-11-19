@@ -17,7 +17,7 @@
 
     <!-- List-->
     <c:if test="${not empty message}">                
-        <div class="alert alert-success">
+        <div class="alert alert-${message.indexOf("ERRO")>=0?"warning":"success"}">
             ${message}
         </div>
     </c:if> 

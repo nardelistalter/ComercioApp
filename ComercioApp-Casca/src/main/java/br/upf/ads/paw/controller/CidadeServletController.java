@@ -197,11 +197,11 @@ public class CidadeServletController extends HttpServlet {
         long id = Integer.valueOf(req.getParameter("id"));
         boolean confirm = false;
         try {
-            System.out.println("Destruindo");
             daoCidade.destroy(id);
-            System.out.println("Destruido");
             confirm = true;
         } catch (Exception ex) {
+            String message = "ERRO: Cidade sendo usada por outra entidade.";
+            req.setAttribute("message", message);
             Logger.getLogger(CidadeServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (confirm) {
