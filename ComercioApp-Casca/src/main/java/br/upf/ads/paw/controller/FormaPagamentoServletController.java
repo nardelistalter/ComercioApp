@@ -58,7 +58,7 @@ public class FormaPagamentoServletController extends HttpServlet {
                         if (p.getConsultar()) {
                             searchByName(req, resp);
                         } else {
-                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                            req.setAttribute("message", "Vocï¿½ nï¿½o tem permissï¿½o para consultar.");
                         }
                         forwardList(req, resp, null);
                         break;
@@ -68,7 +68,7 @@ public class FormaPagamentoServletController extends HttpServlet {
                 if (p.getConsultar()) {
                     result = daoFormaPagamento.findEntities();
                 } else {
-                    req.setAttribute("message", "Você não tem permissão para consulrar");
+                    req.setAttribute("message", "Vocï¿½ nï¿½o tem permissï¿½o para consulrar");
                 }
                 forwardList(req, resp, result);
             }
@@ -120,7 +120,9 @@ public class FormaPagamentoServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
-        if(action==null) doGet(req, resp);
+        if (action == null) {
+            doGet(req, resp);
+        }
         switch (action) {
             case "add":
                 addAction(req, resp);
@@ -167,10 +169,9 @@ public class FormaPagamentoServletController extends HttpServlet {
         if (success) {
             message = "O registro foi atualizado com sucesso";
         }
-        List<FormaPagamento> objList = daoFormaPagamento.findEntities();
         req.setAttribute("id", obj.getId());
         req.setAttribute("message", message);
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     private void removeById(HttpServletRequest req, HttpServletResponse resp)

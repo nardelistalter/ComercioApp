@@ -5,13 +5,21 @@
     <!--Search Form -->
     <form action="/formaPagamento" method="get" id="searchFormaPagamentoForm" role="form">
         <input type="hidden" id="searchAction" name="searchAction" value="searchByName">
-        <div class="form-group col-xs-5">
+        <div class="form-group-lg col-xs-6">
             <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite a descrição da forma de pagamento a procurar"/>                    
         </div>
         <button type="submit" class="btn btn-info">
             <span class="glyphicon glyphicon-search"></span> Procurar
         </button>
         <br></br>
+        <br></br>
+    </form>
+
+    <!-- Include Botton -->
+    <form action ="jsp/form-formaPagamento.jsp">            
+        <c:if test="${permissao.getCriar()}">
+            <button type="submit" class="btn btn-primary  btn-md">Novo Cadastro</button> 
+        </c:if>
         <br></br>
     </form>
 
@@ -26,7 +34,7 @@
         <input type="hidden" id="action" name="action">
         <c:choose>
             <c:when test="${not empty entities}">
-                <table  class="table table-striped">
+                <table  class="table-striped table-xl col-xs-10">
                     <thead>
                         <tr>
                             <td>#</td>
@@ -65,12 +73,6 @@
                 </div>
             </c:otherwise>
         </c:choose>                        
-    </form>
-    <form action ="jsp/form-formaPagamento.jsp">            
-        <br></br>
-        <c:if test="${permissao.getCriar()}">
-            <button type="submit" class="btn btn-primary  btn-md">Novo</button> 
-        </c:if>
     </form>
 </div>
 <%@include file="../footer.jspf" %>
