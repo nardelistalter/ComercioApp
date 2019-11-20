@@ -1,6 +1,7 @@
 package br.upf.ads.paw.entidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -53,7 +54,10 @@ public class Venda implements Serializable {
     @ManyToOne
     private CartaoFidelidade cartaoFidelidade;
     
-    public Venda() {}
+    public Venda() {
+        itens = new ArrayList<ItemVenda>();
+        pagamentos = new ArrayList<Pagamento>();
+    }
 
     public Venda(Long id, Date data, String cpfNaNota, Double totalVenda, Pessoa pessoa, List<ItemVenda> itens, List<Pagamento> pagamentos, CartaoFidelidade cartaoFidelidade) {
         this.id = id;
