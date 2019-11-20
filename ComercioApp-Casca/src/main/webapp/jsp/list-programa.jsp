@@ -7,7 +7,7 @@
     <form action="/programa" method="get" id="searchProgramaForm" role="form">
         <input type="hidden" id="searchAction" name="searchAction" value="searchByName">
         <div class="form-group col-xs-5">
-            <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite a descriï¿½ï¿½o do programa a procurar"/>                    
+            <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite a descrição do programa a procurar"/>                    
         </div>
         <button type="submit" class="btn btn-info">
             <span class="glyphicon glyphicon-search"></span> Procurar
@@ -27,7 +27,7 @@
         <input type="hidden" id="action" name="action">
         <c:choose>
             <c:when test="${not empty entities}">
-                <table  class="table table-striped">
+                <table  class="table-striped table-xl col-xs-10">
                     <thead>
                         <tr>
                             <td>#</td>
@@ -60,6 +60,7 @@
         </c:choose>                        
     </form>
     <form action ="jsp/form-programa.jsp">            
+        <br></br>
         <br></br>
         <button type="submit" class="btn btn-primary  btn-md">Novo</button> 
     </form>
