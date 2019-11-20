@@ -15,6 +15,14 @@
         <br></br>
     </form>
 
+    <!-- Include Botton -->
+    <form action ="jsp/form-estado.jsp">            
+        <c:if test="${permissao.getCriar()}">
+            <button type="submit" class="btn btn-primary  btn-md">Novo Cadastro</button> 
+        </c:if>
+        <br></br>
+    </form>
+
     <!-- List-->
     <c:if test="${not empty message}">                
         <div class="alert alert-success">
@@ -26,7 +34,7 @@
         <input type="hidden" id="action" name="action">
         <c:choose>
             <c:when test="${not empty entities}">
-                <table  class="table table-striped">
+                <table  class="table-striped table-xl col-xs-10">
                     <thead>
                         <tr>
                             <td>#</td>
@@ -67,12 +75,6 @@
                 </div>
             </c:otherwise>
         </c:choose>                        
-    </form>
-    <form action ="/cidade?action=new" method="POST">            
-        <br></br>
-        <c:if test="${permissao.getCriar()}">
-            <button type="submit" class="btn btn-primary  btn-md">Nova Cidade</button> 
-        </c:if>   
     </form>
 </div>
 <%@include file="../footer.jspf" %>

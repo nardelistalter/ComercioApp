@@ -47,7 +47,7 @@ public class FuncionarioServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
-        // TODO - Arrumar o módulo de permissões
+
         Permissao p = Valida.acesso(req, resp, "Funcionario");
         if (p == null) {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login?url=/funcionario");
@@ -116,7 +116,9 @@ public class FuncionarioServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
-        if(action==null) doGet(req, resp);
+        if (action == null) {
+            doGet(req, resp);
+        }
         switch (action) {
             case "new":
                 newAction(req, resp);
@@ -243,8 +245,7 @@ public class FuncionarioServletController extends HttpServlet {
             String message = "O registro foi removido com sucesso.";
             req.setAttribute("message", message);
         }
-        List<Funcionario> objList = daoFuncionario.findEntities();
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     /**

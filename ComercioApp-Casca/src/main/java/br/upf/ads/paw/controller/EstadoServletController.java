@@ -41,6 +41,7 @@ public class EstadoServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
+
         Permissao p = Valida.acesso(req, resp, "Estado");
         if (p == null) {
             req.setAttribute("message", "Acesso negado. Tente fazer login.");
@@ -62,7 +63,7 @@ public class EstadoServletController extends HttpServlet {
                         } else {
                             req.setAttribute("message", "Você não tem permissão para consultar.");
                         }
-                        forwardList(req, resp, null);                        
+                        forwardList(req, resp, null);
                         break;
                 }
             } else {
@@ -122,7 +123,9 @@ public class EstadoServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
-        if(action==null) doGet(req, resp);
+        if (action == null) {
+            doGet(req, resp);
+        }
         switch (action) {
             case "add":
                 addAction(req, resp);

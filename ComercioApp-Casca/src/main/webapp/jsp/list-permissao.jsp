@@ -15,6 +15,14 @@
         <br></br>
     </form>
 
+    <!-- Include Botton -->
+    <form action ="jsp/form-permissao.jsp">            
+        <c:if test="${permissao.getCriar()}">
+            <button type="submit" class="btn btn-primary  btn-md">Novo Cadastro</button> 
+        </c:if>
+        <br></br>
+    </form>
+
     <!-- List-->
     <c:if test="${not empty message}">                
         <div class="alert alert-success">
@@ -26,7 +34,7 @@
         <input type="hidden" id="action" name="action">
         <c:choose>
             <c:when test="${not empty entities}">
-                <table  class="table table-striped">
+                <table  class="table-striped table-xl col-xs-10">
                     <thead>
                         <tr>
                             <td>#</td>
@@ -42,7 +50,12 @@
                     <c:forEach var="obj" items="${entities}">
                         <tr class="${id == obj.id?"info":""}">
                             <td>
-                                <a href="/permissao?id=${obj.id}&action=searchById">${obj.id}</a>
+                                <c:if test="${permissao.getAlterar()}">
+                                    <a href="/permissao?id=${obj.id}&action=searchById">${obj.id}</a>
+                                </c:if>
+                                <c:if test="${!permissao.getAlterar()}">
+                                    ${obj.id}
+                                </c:if>
                             </td>                                    
                             <td>${obj.programa}</td>
                             <td>${obj.categoriaFuncional}</td>
@@ -50,13 +63,15 @@
                             <td><span class="glyphicon glyphicon-${obj.criar?"ok":"remove"}"/></td>
                             <td><span class="glyphicon glyphicon-${obj.excluir?"ok":"remove"}"/></td>
                             <td><span class="glyphicon glyphicon-${obj.consultar?"ok":"remove"}"/></td>
-                            <td><a href="#" id="remove" 
-                                   onclick="document.getElementById('action').value = 'remove';
-                                           document.getElementById('id').value = '${obj.id}';
-                                           document.getElementById('permissaoForm').submit();"> 
-                                    <span class="glyphicon glyphicon-trash"/>
-                                </a>
-
+                            <td>
+                                <c:if test="${permissao.getExcluir()}">
+                                    <a href="#" id="remove" 
+                                       onclick="document.getElementById('action').value = 'remove';
+                                               document.getElementById('id').value = '${obj.id}';
+                                               document.getElementById('permissaoForm').submit();"> 
+                                        <span class="glyphicon glyphicon-trash"/>
+                                    </a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>               
@@ -69,10 +84,6 @@
                 </div>
             </c:otherwise>
         </c:choose>                        
-    </form>
-    <form action ="/permissao?action=new" method="POST">            
-        <br></br>
-        <button type="submit" class="btn btn-primary  btn-md">Novo</button> 
     </form>
 </div>
 <%@include file="../footer.jspf" %>
