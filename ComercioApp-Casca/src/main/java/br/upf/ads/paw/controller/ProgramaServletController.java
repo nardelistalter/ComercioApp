@@ -6,6 +6,7 @@
 package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
+import br.upf.ads.paw.entidades.Permissao;
 import br.upf.ads.paw.entidades.Programa;
 import java.io.IOException;
 import java.util.List;
@@ -40,19 +41,40 @@ public class ProgramaServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
-        String action = req.getParameter("searchAction");
-        if (action != null) {
-            switch (action) {
-                case "searchById":
-                    searchById(req, resp);
-                    break;
-                case "searchByName":
-                    searchByName(req, resp);
-                    break;
-            }
+
+        Permissao p = Valida.acesso(req, resp, "Programa");
+        if (p == null) {
+            req.setAttribute("message", "Acesso negado. Tente fazer login.");
+            RequestDispatcher dispatcher
+                    = getServletContext().
+                            getRequestDispatcher("/login?url=/programa");
+            dispatcher.forward(req, resp);
         } else {
-            List<Programa> result = dao.findEntities();
-            forwardList(req, resp, result);
+            req.setAttribute("permissao", p);
+            String action = req.getParameter("searchAction");
+            if (action != null) {
+                switch (action) {
+                    case "searchById":
+                        searchById(req, resp);
+                        break;
+                    case "searchByName":
+                        if (p.getConsultar()) {
+                            searchByName(req, resp);
+                        } else {
+                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                        }
+                        forwardList(req, resp, null);
+                        break;
+                }
+            } else {
+                List<Programa> result = null;
+                if (p.getConsultar()) {
+                    result = dao.findEntities();
+                } else {
+                    req.setAttribute("message", "Você não tem permissão para consultar.");
+                }
+                forwardList(req, resp, result);
+            }
         }
     }
 
@@ -88,14 +110,6 @@ public class ProgramaServletController extends HttpServlet {
         dispatcher.forward(req, resp);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest req,
             HttpServletResponse resp)
