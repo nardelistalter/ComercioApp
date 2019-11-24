@@ -16,7 +16,7 @@
     </form>
 
     <!-- Include Botton -->
-    <form action ="jsp/form-permissao.jsp">            
+    <form action ="/permissao?action=new" method="POST">            
         <c:if test="${permissao.getCriar()}">
             <button type="submit" class="btn btn-primary  btn-md">Novo Cadastro</button> 
         </c:if>
