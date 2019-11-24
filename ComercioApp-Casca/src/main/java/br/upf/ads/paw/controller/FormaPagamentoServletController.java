@@ -43,6 +43,7 @@ public class FormaPagamentoServletController extends HttpServlet {
             throws ServletException, IOException {
 
         Permissao p = Valida.acesso(req, resp, "FormaPagamento");
+        
         if (p == null) {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login?url=/formaPagamento");
             dispatcher.forward(req, resp);
@@ -144,11 +145,10 @@ public class FormaPagamentoServletController extends HttpServlet {
             FormaPagamento obj = new FormaPagamento(null, descricao);
             daoFormaPagamento.create(obj);
             long id = obj.getId();
-            List<FormaPagamento> objList = daoFormaPagamento.findEntities();
             req.setAttribute("id", id);
             String message = "Um novo registro foi criado com sucesso.";
             req.setAttribute("message", message);
-            forwardList(req, resp, objList);
+            doGet(req, resp);
         } catch (Exception ex) {
             Logger.getLogger(FormaPagamentoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -188,8 +188,7 @@ public class FormaPagamentoServletController extends HttpServlet {
             String message = "O registro foi removido com sucesso.";
             req.setAttribute("message", message);
         }
-        List<FormaPagamento> objList = daoFormaPagamento.findEntities();
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     /**

@@ -136,11 +136,10 @@ public class ProgramaServletController extends HttpServlet {
             Programa obj = new Programa(null, nome);
             dao.create(obj);
             long id = obj.getId();
-            List<Programa> objList = dao.findEntities();
             req.setAttribute("id", id);
             String message = "Um novo registro foi criado com sucesso.";
             req.setAttribute("message", message);
-            forwardList(req, resp, objList);
+            doGet(req, resp);
         } catch (Exception ex) {
             Logger.getLogger(ProgramaServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -161,10 +160,9 @@ public class ProgramaServletController extends HttpServlet {
         if (success) {
             message = "O registro foi atualizado com sucesso";
         }
-        List<Programa> objList = dao.findEntities();
         req.setAttribute("id", obj.getId());
         req.setAttribute("message", message);
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     private void removeById(HttpServletRequest req, HttpServletResponse resp)
@@ -181,8 +179,7 @@ public class ProgramaServletController extends HttpServlet {
             String message = "O registro foi removido com sucesso.";
             req.setAttribute("message", message);
         }
-        List<Programa> objList = dao.findEntities();
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     /**

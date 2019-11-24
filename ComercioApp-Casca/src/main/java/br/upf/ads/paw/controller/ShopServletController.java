@@ -26,10 +26,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "ShopServletController", urlPatterns = {"/shop"})
 public class ShopServletController extends HttpServlet {
+
     GenericDao<Produto> daoP = new GenericDao<>(Produto.class);
     GenericDao<Categoria> daoC = new GenericDao<>(Categoria.class);
     GenericDao<Venda> daoV = new GenericDao<>(Venda.class);
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -41,22 +42,22 @@ public class ShopServletController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if(request.getParameter("id")!=null) {
+        if (request.getParameter("id") != null) {
             Venda v;
             Long id = Long.parseLong(request.getParameter("id"));
-            if(request.getSession().getAttribute("cesta") != null) {
+            if (request.getSession().getAttribute("cesta") != null) {
                 v = (Venda) request.getSession().getAttribute("cesta");
             } else {
                 v = new Venda();
             }
             Produto p = daoP.findEntity(id);
-            v.getItens().add(new ItemVenda(null, 1.0, p.getPrecoVenda(), 
+            v.getItens().add(new ItemVenda(null, 1.0, p.getPrecoVenda(),
                     0.0, p.getPrecoVenda(), p, v));
-            
+
             request.getSession().setAttribute("cesta", v);
-            System.out.println("quantidade: "+v.getItens().size());
+            System.out.println("quantidade: " + v.getItens().size());
         }
-        
+
         forwardList(request, response, daoP.findEntities());
     }
 
@@ -67,6 +68,7 @@ public class ShopServletController extends HttpServlet {
         req.setAttribute("entities", entityList);
         dispatcher.forward(req, resp);
     }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

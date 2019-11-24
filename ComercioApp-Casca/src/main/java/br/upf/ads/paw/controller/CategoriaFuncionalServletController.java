@@ -7,6 +7,7 @@ package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
 import br.upf.ads.paw.entidades.CategoriaFuncional;
+import br.upf.ads.paw.entidades.Permissao;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,19 +41,41 @@ public class CategoriaFuncionalServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
-        String action = req.getParameter("searchAction");
-        if (action != null) {
-            switch (action) {
-                case "searchById":
-                    searchById(req, resp);
-                    break;
-                case "searchByName":
-                    searchByName(req, resp);
-                    break;
-            }
+
+        Permissao p = Valida.acesso(req, resp, "CategoriaFuncional");
+
+        if (p == null) {
+            req.setAttribute("message", "Acesso negado. Tente fazer login.");
+            RequestDispatcher dispatcher
+                    = getServletContext().
+                            getRequestDispatcher("/login?url=/categoriaFuncional");
+            dispatcher.forward(req, resp);
         } else {
-            List<CategoriaFuncional> result = dao.findEntities();
-            forwardList(req, resp, result);
+            req.setAttribute("permissao", p);
+            String action = req.getParameter("searchAction");
+            if (action != null) {
+                switch (action) {
+                    case "searchById":
+                        searchById(req, resp);
+                        break;
+                    case "searchByName":
+                        if (p.getConsultar()) {
+                            searchByName(req, resp);
+                        } else {
+                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                        }
+                        forwardList(req, resp, null);
+                        break;
+                }
+            } else {
+                List<CategoriaFuncional> result = null;
+                if (p.getConsultar()) {
+                    result = dao.findEntities();
+                } else {
+                    req.setAttribute("message", "Você não tem permissão para consultar.");
+                }
+                forwardList(req, resp, result);
+            }
         }
     }
 
@@ -101,7 +124,9 @@ public class CategoriaFuncionalServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
-        if(action==null) doGet(req, resp);
+        if (action == null) {
+            doGet(req, resp);
+        }
         switch (action) {
             case "add":
                 addAction(req, resp);
@@ -123,11 +148,10 @@ public class CategoriaFuncionalServletController extends HttpServlet {
             CategoriaFuncional obj = new CategoriaFuncional(null, descricao);
             dao.create(obj);
             long id = obj.getId();
-            List<CategoriaFuncional> objList = dao.findEntities();
             req.setAttribute("id", id);
             String message = "Um novo registro foi criado com sucesso.";
             req.setAttribute("message", message);
-            forwardList(req, resp, objList);
+            doGet(req, resp);
         } catch (Exception ex) {
             Logger.getLogger(CategoriaFuncionalServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -148,10 +172,9 @@ public class CategoriaFuncionalServletController extends HttpServlet {
         if (success) {
             message = "O registro foi atualizado com sucesso";
         }
-        List<CategoriaFuncional> objList = dao.findEntities();
         req.setAttribute("id", obj.getId());
         req.setAttribute("message", message);
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     private void removeById(HttpServletRequest req, HttpServletResponse resp)
@@ -168,8 +191,7 @@ public class CategoriaFuncionalServletController extends HttpServlet {
             String message = "O registro foi removido com sucesso.";
             req.setAttribute("message", message);
         }
-        List<CategoriaFuncional> objList = dao.findEntities();
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     /**

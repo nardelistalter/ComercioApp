@@ -43,6 +43,7 @@ public class EstadoServletController extends HttpServlet {
             throws ServletException, IOException {
 
         Permissao p = Valida.acesso(req, resp, "Estado");
+
         if (p == null) {
             req.setAttribute("message", "Acesso negado. Tente fazer login.");
             RequestDispatcher dispatcher
