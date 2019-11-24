@@ -16,7 +16,7 @@
     </form>
 
     <!-- Include Botton -->
-    <form action ="/permissao?action=new" method="POST">            
+    <form action ="/permissao?action=new" method="POST">         
         <c:if test="${permissao.getCriar()}">
             <button type="submit" class="btn btn-primary  btn-md">Novo Cadastro</button> 
         </c:if>
@@ -51,7 +51,7 @@
                         <tr class="${id == obj.id?"info":""}">
                             <td>
                                 <c:if test="${permissao.getAlterar()}">
-                                    <a href="/permissao?id=${obj.id}&action=searchById">${obj.id}</a>
+                                    <a href="/permissao?id=${obj.id}&searchAction=searchById">${obj.id}</a>
                                 </c:if>
                                 <c:if test="${!permissao.getAlterar()}">
                                     ${obj.id}
