@@ -41,23 +41,63 @@ public class PermissaoServletController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+//    @Override
+//    protected void doGet(HttpServletRequest req,
+//            HttpServletResponse resp)
+//            throws ServletException, IOException {
+//        String action = req.getParameter("action");
+//        if (action != null) {
+//            switch (action) {
+//                case "searchById":
+//                    searchById(req, resp);
+//                    break;
+//                case "search":
+//                    search(req, resp);
+//                    break;
+//            }
+//        } else {
+//            List<Permissao> result = daoPermissao.findEntities();
+//            forwardList(req, resp, result);
+//        }
+//    }
     @Override
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
-        String action = req.getParameter("action");
-        if (action != null) {
-            switch (action) {
-                case "searchById":
-                    searchById(req, resp);
-                    break;
-                case "search":
-                    search(req, resp);
-                    break;
-            }
+
+        Permissao p = Valida.acesso(req, resp, "Permissao");
+        if (p == null) {
+            req.setAttribute("message", "Acesso negado. Tente fazer login.");
+            RequestDispatcher dispatcher
+                    = getServletContext().
+                            getRequestDispatcher("/login?url=/permissao");
+            dispatcher.forward(req, resp);
         } else {
-            List<Permissao> result = daoPermissao.findEntities();
-            forwardList(req, resp, result);
+            req.setAttribute("permissao", p);
+            String action = req.getParameter("searchAction");
+            if (action != null) {
+                switch (action) {
+                    case "searchById":
+                        searchById(req, resp);
+                        break;
+                    case "searchByName":
+                        if (p.getConsultar()) {
+                            search(req, resp);
+                        } else {
+                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                        }
+                        forwardList(req, resp, null);
+                        break;
+                }
+            } else {
+                List<Permissao> result = null;
+                if (p.getConsultar()) {
+                    result = daoPermissao.findEntities();
+                } else {
+                    req.setAttribute("message", "Você não tem permissão para consultar.");
+                }
+                forwardList(req, resp, result);
+            }
         }
     }
 
@@ -96,14 +136,7 @@ public class PermissaoServletController extends HttpServlet {
         dispatcher.forward(req, resp);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+ 
     @Override
     protected void doPost(HttpServletRequest req,
             HttpServletResponse resp)
@@ -129,7 +162,7 @@ public class PermissaoServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String nextJSP = "/jsp/form-permissao.jsp";
-        //List<Programa> list = daoPrograma.findEntities();
+ 
         req.setAttribute("listPrograma", daoPrograma.findEntities());
         req.setAttribute("listCategoriaFuncional", daoCategoriaFuncional.findEntities());
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
@@ -154,11 +187,10 @@ public class PermissaoServletController extends HttpServlet {
             Permissao obj = new Permissao(null, alterar, criar, excluir, consultar, daoPrograma.findEntity(idPrograma), daoCategoriaFuncional.findEntity(idCFuncional));
             daoPermissao.create(obj);
             long id = obj.getId();
-            List<Permissao> objList = daoPermissao.findEntities();
             req.setAttribute("id", id);
             String message = "Um novo registro foi criado com sucesso.";
             req.setAttribute("message", message);
-            forwardList(req, resp, objList);
+            doGet(req, resp);
         } catch (Exception ex) {
             Logger.getLogger(PermissaoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -190,10 +222,10 @@ public class PermissaoServletController extends HttpServlet {
         if (success) {
             message = "O registro foi atualizado com sucesso";
         }
-        List<Permissao> objList = daoPermissao.findEntities();
+
         req.setAttribute("id", obj.getId());
         req.setAttribute("message", message);
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     private void removeById(HttpServletRequest req, HttpServletResponse resp)
@@ -210,8 +242,8 @@ public class PermissaoServletController extends HttpServlet {
             String message = "O registro foi removido com sucesso.";
             req.setAttribute("message", message);
         }
-        List<Permissao> objList = daoPermissao.findEntities();
-        forwardList(req, resp, objList);
+
+        doGet(req, resp);
     }
 
     /**
