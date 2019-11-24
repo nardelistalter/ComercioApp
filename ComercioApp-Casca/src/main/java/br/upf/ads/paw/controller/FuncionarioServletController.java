@@ -49,6 +49,7 @@ public class FuncionarioServletController extends HttpServlet {
             throws ServletException, IOException {
 
         Permissao p = Valida.acesso(req, resp, "Funcionario");
+        
         if (p == null) {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login?url=/funcionario");
             dispatcher.forward(req, resp);
@@ -174,11 +175,10 @@ public class FuncionarioServletController extends HttpServlet {
             Funcionario obj = new Funcionario(admissao, demissao, ctps, salario, login, senha, categoriaFuncional, cpf, rg, sexo, nascimento, null, nome, logradouro, numero, complemento, bairro, email, telefone, cep, cidade);
             daoFuncionario.create(obj);
             long id = obj.getId();
-            List<Funcionario> objList = daoFuncionario.findEntities();
             req.setAttribute("id", id);
             String message = "Um novo registro foi criado com sucesso.";
             req.setAttribute("message", message);
-            forwardList(req, resp, objList);
+            doGet(req, resp);
         } catch (Exception ex) {
             Logger.getLogger(FuncionarioServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -222,10 +222,9 @@ public class FuncionarioServletController extends HttpServlet {
             if (success) {
                 message = "O registro foi atualizado com sucesso";
             }
-            List<Funcionario> objList = daoFuncionario.findEntities();
             req.setAttribute("id", obj.getId());
             req.setAttribute("message", message);
-            forwardList(req, resp, objList);
+            doGet(req, resp);
         } catch (Exception ex) {
             Logger.getLogger(FuncionarioServletController.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -75,10 +75,6 @@
             </c:otherwise>
         </c:choose>                        
     </form>
-    <form action ="jsp/form-programa.jsp">            
-        <br></br>
-        <button type="submit" class="btn btn-primary  btn-md">Novo</button> 
-    </form>
 </div>
 
 <%@include file="../footer.jspf" %>
