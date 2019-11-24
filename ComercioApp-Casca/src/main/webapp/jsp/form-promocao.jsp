@@ -5,7 +5,7 @@
                 <c:if test ="${empty action}">                        	
                     <c:set var="action" value="add"/>
                 </c:if>
-                <input type="hidden" id="action" name="action" value="${action}">
+                <input type="hidden" name="action" value="${action}">
                 <input type="hidden" id="id" name="id" value="${obj.id}">
                 <h2>Promocao</h2>
                 <div class="form-group col-xs-4">
@@ -13,10 +13,10 @@
                     <input type="date" name="inicio" id="inicio" class="form-control" value="${obj.inicio}" required="true"/>                                   
                     <label for="fim" class="control-label col-xs-4">Fim:</label>
                     <input type="date" name="fim" id="fim" class="form-control" value="${obj.fim}" required="true"/>                                   
-                    <label for="percentualDesconto" class="control-label col-xs-4">Percentual Desconto</label>
-                    <input type="text" name="percentualDesconto" id="percentualDesconto" class="form-control" value="${obj.percentualDesconto}" required="true"/>                                   
+                    <label for="porcentualDesconto" class="control-label col-xs-4">Percentual Desconto</label>
+                    <input type="text" name="porcentualDesconto" id="porcentualDesconto" class="form-control" value="${obj.porcentualDesconto}" required="true"/>                                   
                     <label for="soFidelidade" class="control-label col-xs-4">Só Fidelidade</label>
-                    <input type="checkbox" name="soFidelidade" id="soFidelidade" class="form-control" value="${obj.soFidelidade}" required="true"/>                                   
+                    <input type="checkbox" name="soFidelidade" id="soFidelidade" class="form-control" value="${obj.soFidelidade}"/>                                   
                     <label for="produto" class="control-label col-xs-4">Produto:</label>
                     <select name="produto" class="form-control">
                         <c:forEach var="produto" items="${listProduto}">

@@ -6,9 +6,12 @@
 package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
+import br.upf.ads.paw.entidades.Permissao;
 import br.upf.ads.paw.entidades.Promocao;
 import br.upf.ads.paw.entidades.Produto;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Anderson
  */
-
 @WebServlet(name = "PromocaoServletController", urlPatterns = {"/promocao"})
 public class PromocaoServletController extends HttpServlet {
 
@@ -44,12 +46,14 @@ public class PromocaoServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
-        if (Valida.acesso(req, resp, "Promocao")==null) {
+        Permissao p = Valida.acesso(req, resp, "Promocao");
+        if (p == null) {
             RequestDispatcher dispatcher
                     = getServletContext().
                             getRequestDispatcher("/login?url=/promocao");
             dispatcher.forward(req, resp);
         } else {
+            req.setAttribute("permissao", p);
             String action = req.getParameter("action");
             if (action != null) {
                 switch (action) {
@@ -57,11 +61,21 @@ public class PromocaoServletController extends HttpServlet {
                         searchById(req, resp);
                         break;
                     case "search":
-                        search(req, resp);
+                        if (p.getConsultar()) {
+                            search(req, resp);
+                        } else {
+                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                        }
+                        forwardList(req, resp, null);
                         break;
                 }
             } else {
-                List<Promocao> result = daoPromocao.findEntities();
+                List<Promocao> result = null;
+                if (p.getConsultar()) {
+                    result = daoPromocao.findEntities();
+                } else {
+                    req.setAttribute("message", "Você não tem permissão para consultar.");
+                }
                 forwardList(req, resp, result);
             }
         }
@@ -144,16 +158,23 @@ public class PromocaoServletController extends HttpServlet {
         try {
             String nome = req.getParameter("nome");
             long idProduto = Long.parseLong(req.getParameter("produto"));
-                    
-            
-            Promocao obj = new Promocao(null, new Date(), new Date(), Double.POSITIVE_INFINITY,false,new Produto());
+
+            String inicio = req.getParameter("inicio");
+            String fim = req.getParameter("fim");
+
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+            Date dataInicio = sf.parse(inicio);
+            Date dataFim = sf.parse(fim);
+            Boolean soFidelidade = req.getParameter("soFidelidade") != null;
+            Double desconto = Double.parseDouble(req.getParameter("porcentualDesconto"));
+
+            Promocao obj = new Promocao(null, dataInicio, dataFim, desconto, soFidelidade, daoProduto.findEntity(idProduto));
             daoPromocao.create(obj);
             long id = obj.getId();
-            List<Promocao> objList = daoPromocao.findEntities();
             req.setAttribute("id", id);
             String message = "Um novo registro foi criado com sucesso.";
             req.setAttribute("message", message);
-            forwardList(req, resp, objList);
+            doGet(req, resp);
         } catch (Exception ex) {
             Logger.getLogger(PromocaoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -163,23 +184,41 @@ public class PromocaoServletController extends HttpServlet {
         long id = Integer.valueOf(req.getParameter("id"));
         String nome = req.getParameter("nome");
         long idProduto = Long.parseLong(req.getParameter("produto"));
+        String inicio = req.getParameter("inicio");
+        String fim = req.getParameter("fim");
 
-        Promocao obj = new Promocao(null, new Date(), new Date(), Double.POSITIVE_INFINITY,false,new Produto());
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        Date dataInicio = null;
+        try {
+            dataInicio = sf.parse(inicio);
+        } catch (ParseException ex) {
+            Logger.getLogger(PromocaoServletController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Date dataFim = null;
+        try {
+            dataFim = sf.parse(fim);
+        } catch (ParseException ex) {
+            Logger.getLogger(PromocaoServletController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Boolean soFidelidade = req.getParameter("soFidelidade") != null;
+        Double desconto = Double.parseDouble(req.getParameter("porcentualDesconto"));
+
+        Promocao obj = new Promocao(null, dataInicio, dataFim, desconto, soFidelidade, daoProduto.findEntity(idProduto));
+
         boolean success = false;
         try {
             daoPromocao.edit(obj);
             success = true;
         } catch (Exception ex) {
-            Logger.getLogger(PromocaoServletController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EstadoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
         String message = null;
         if (success) {
-            message = "O registro foi atualizado com sucesso";
+            message = "A promoção foi atualizada com sucesso";
         }
-        List<Promocao> objList = daoPromocao.findEntities();
         req.setAttribute("id", obj.getId());
         req.setAttribute("message", message);
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     private void removeById(HttpServletRequest req, HttpServletResponse resp)
@@ -190,14 +229,15 @@ public class PromocaoServletController extends HttpServlet {
             daoPromocao.destroy(id);
             confirm = true;
         } catch (Exception ex) {
+            String message = "ERRO: Promocão sendo usada por outra entidade.";
+            req.setAttribute("message", message);
             Logger.getLogger(PromocaoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (confirm) {
             String message = "O registro foi removido com sucesso.";
             req.setAttribute("message", message);
         }
-        List<Promocao> objList = daoPromocao.findEntities();
-        forwardList(req, resp, objList);
+        doGet(req, resp);
     }
 
     /**
