@@ -51,21 +51,33 @@ public class FuncionarioServletController extends HttpServlet {
         Permissao p = Valida.acesso(req, resp, "Funcionario");
         
         if (p == null) {
+            req.setAttribute("message", "Acesso negado. Tente fazer login.");
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login?url=/funcionario");
             dispatcher.forward(req, resp);
         } else {
-            String action = req.getParameter("action");
+            req.setAttribute("permissao", p);
+            String action = req.getParameter("searchAction");
             if (action != null) {
                 switch (action) {
                     case "searchById":
                         searchById(req, resp);
                         break;
                     case "search":
-                        search(req, resp);
+                        if (p.getConsultar()) {
+                            search(req, resp);
+                        } else {
+                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                        }
+                        forwardList(req, resp, null);
                         break;
                 }
             } else {
-                List<Funcionario> result = daoFuncionario.findEntities();
+                List<Funcionario> result = null;
+                if (p.getConsultar()) {
+                    result = daoFuncionario.findEntities();
+                } else {
+                    req.setAttribute("message", "Você não tem permissão para consultar.");
+                }
                 forwardList(req, resp, result);
             }
         }
@@ -162,10 +174,10 @@ public class FuncionarioServletController extends HttpServlet {
             String cpf = req.getParameter("cpf");
             String rg = req.getParameter("rg");
             Character sexo = 'M';
-            Date nascimento = new SimpleDateFormat("dd/MM/yyyy").parse(req.getParameter("nascimento"));
+            Date nascimento = new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("nascimento"));
 
-            Date admissao = new SimpleDateFormat("dd/MM/yyyy").parse(req.getParameter("admissao"));
-            Date demissao = new SimpleDateFormat("dd/MM/yyyy").parse(req.getParameter("demissao"));
+            Date admissao = new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("admissao"));
+            Date demissao = new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("demissao"));
             String ctps = req.getParameter("ctps");
             Double salario = Double.parseDouble(req.getParameter("salario"));
             String login = req.getParameter("login");
@@ -200,10 +212,10 @@ public class FuncionarioServletController extends HttpServlet {
             String cpf = req.getParameter("cpf");
             String rg = req.getParameter("rg");
             Character sexo = 'M';
-            Date nascimento = new SimpleDateFormat("dd/MM/yyyy").parse(req.getParameter("nascimento"));
+            Date nascimento = new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("nascimento"));
 
-            Date admissao = new SimpleDateFormat("dd/MM/yyyy").parse(req.getParameter("admissao"));
-            Date demissao = new SimpleDateFormat("dd/MM/yyyy").parse(req.getParameter("demissao"));
+            Date admissao = new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("admissao"));
+            Date demissao = new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("demissao"));
             String ctps = req.getParameter("ctps");
             Double salario = Double.parseDouble(req.getParameter("salario"));
             String login = req.getParameter("login");
