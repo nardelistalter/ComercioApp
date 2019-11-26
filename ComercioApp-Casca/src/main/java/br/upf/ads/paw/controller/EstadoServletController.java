@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
@@ -96,8 +91,7 @@ public class EstadoServletController extends HttpServlet {
         dispatcher.forward(req, resp);
     }
 
-    private void searchByName(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    private void searchByName(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("nome");
         List<Estado> result = dao.findEntitiesByField("nome", name);  // buscar por nome
         forwardList(req, resp, result);

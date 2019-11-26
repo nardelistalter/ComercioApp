@@ -40,8 +40,9 @@ public class CidadeServletController extends HttpServlet {
             throws ServletException, IOException {
 
         Permissao p = Valida.acesso(req, resp, "Cidade");
-        
+
         if (p == null) {
+            req.setAttribute("message", "Acesso negado. Tente fazer login.");
             RequestDispatcher dispatcher
                     = getServletContext().
                             getRequestDispatcher("/login?url=/cidade");
@@ -93,8 +94,7 @@ public class CidadeServletController extends HttpServlet {
         dispatcher.forward(req, resp);
     }
 
-    private void search(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String search = req.getParameter("search");
         List<Cidade> result = daoCidade.findEntitiesByField("nome", search);  // buscar por nome
         forwardList(req, resp, result);
@@ -174,6 +174,7 @@ public class CidadeServletController extends HttpServlet {
         long idEstado = Long.parseLong(req.getParameter("estado"));
 
         Cidade obj = new Cidade(id, nome, daoEstado.findEntity(idEstado));
+
         boolean success = false;
         try {
             daoCidade.edit(obj);

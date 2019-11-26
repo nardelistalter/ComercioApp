@@ -4,7 +4,7 @@
     <h2>Permissões</h2>
     <!--Search Form -->
     <form action="/permissao" method="get" id="searchPermissao" role="form">
-        <input type="hidden" id="" name="action" value="search">
+        <input type="hidden" id="action" name="action" value="search">
         <div class="form-group col-xs-5">
             <input type="text" name="search" id="search" class="form-control" placeholder="Digite a informação a procurar"/>                    
         </div>

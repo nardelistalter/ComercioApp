@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
@@ -41,31 +36,13 @@ public class PermissaoServletController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-//    @Override
-//    protected void doGet(HttpServletRequest req,
-//            HttpServletResponse resp)
-//            throws ServletException, IOException {
-//        String action = req.getParameter("action");
-//        if (action != null) {
-//            switch (action) {
-//                case "searchById":
-//                    searchById(req, resp);
-//                    break;
-//                case "search":
-//                    search(req, resp);
-//                    break;
-//            }
-//        } else {
-//            List<Permissao> result = daoPermissao.findEntities();
-//            forwardList(req, resp, result);
-//        }
-//    }
     @Override
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
 
         Permissao p = Valida.acesso(req, resp, "Permissao");
+
         if (p == null) {
             req.setAttribute("message", "Acesso negado. Tente fazer login.");
             RequestDispatcher dispatcher
@@ -124,10 +101,17 @@ public class PermissaoServletController extends HttpServlet {
         String search = req.getParameter("search");
         Query q = daoPermissao.getEntityManager().createQuery("FROM Permissao p WHERE p.programa.nome LIKE '%" + search + "%' OR p.categoriaFuncional.descricao LIKE '%" + search + "%'");
         List<Permissao> result = q.getResultList();  // buscar por nome
-
         forwardList(req, resp, result);
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     private void forwardList(HttpServletRequest req, HttpServletResponse resp, List entityList)
             throws ServletException, IOException {
         String nextJSP = "/jsp/list-permissao.jsp";
@@ -136,7 +120,6 @@ public class PermissaoServletController extends HttpServlet {
         dispatcher.forward(req, resp);
     }
 
- 
     @Override
     protected void doPost(HttpServletRequest req,
             HttpServletResponse resp)
@@ -162,7 +145,6 @@ public class PermissaoServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String nextJSP = "/jsp/form-permissao.jsp";
- 
         req.setAttribute("listPrograma", daoPrograma.findEntities());
         req.setAttribute("listCategoriaFuncional", daoCategoriaFuncional.findEntities());
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);

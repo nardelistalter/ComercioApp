@@ -1,12 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="../header.jspf" %>
 <div class="container">
-    <h2>Promocao</h2>
+    <h2>Promoções</h2>
+    
     <!--Search Form -->
     <form action="/promocao" method="get" id="searchPromocao" role="form">
         <input type="hidden" id="action" name="action" value="search">
         <div class="form-group col-xs-5">
-            <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite a descrição da promocao a procurar"/>                    
+            <input type="text" id="search" name="search" class="form-control" required="true" placeholder="Digite a descrição da promocao a procurar"/>                    
         </div>
         <button type="submit" class="btn btn-info">
             <span class="glyphicon glyphicon-search"></span> Procurar
@@ -25,7 +26,7 @@
 
     <!-- List-->
     <c:if test="${not empty message}">                
-        <div class="alert alert-success">
+        <div class="alert alert-${message.indexOf("ERRO")>=0?"warning":"success"}">
             ${message}
         </div>
     </c:if> 
@@ -34,14 +35,15 @@
         <input type="hidden" id="action" name="action">
         <c:choose>
             <c:when test="${not empty entities}">
-                <table  class="table-striped table-xl col-xs-10">
+                <table  class="table-striped table-xl col-xs-12">
                     <thead>
                         <tr>
                             <td>#</td>
-                            <td>inicio</td>
-                            <td>fim</td>
-                            <td>porcentualDesconto</td>
-                            <td>soFidelidade</td>
+                            <td>Produto</td>
+                            <td>Início</td>
+                            <td>Fim</td>
+                            <td>PorcentualDesconto</td>
+                            <td>SóFidelidade</td>
                             <td></td>
                         </tr>
                     </thead>
@@ -49,12 +51,13 @@
                         <tr class="${id == obj.id?"info":""}">
                             <td>
                                 <c:if test="${permissao.getAlterar()}">
-                                    <a href="/promocao?id=${obj.id}&action=searchById">${obj.id}</a>
+                                    <a href="/promocao?id=${obj.id}&search=searchById">${obj.id}</a>
                                 </c:if>
                                 <c:if test="${!permissao.getAlterar()}">
                                     ${obj.id}
                                 </c:if>
-                            </td>                                    
+                            </td> 
+                            <td>${obj.produto}</td>
                             <td>${obj.inicio}</td>
                             <td>${obj.fim}</td>
                             <td>${obj.porcentualDesconto}</td>
@@ -62,8 +65,9 @@
                             <td>
                                 <c:if test="${permissao.getExcluir()}">
                                     <a href="#" id="remove" 
-                                       onclick="document.getElementById('action').value = 'remove';document.getElementById('id').value = '${obj.id}';
-                                               document.getElementById('promocaoForm').submit();"> 
+                                       onclick="document.getElementById('action').value = 'remove';
+                                                document.getElementById('id').value = '${obj.id}';
+                                                document.getElementById('promocaoForm').submit();"> 
                                         <span class="glyphicon glyphicon-trash"/>
                                     </a>
                                 </c:if>

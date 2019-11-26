@@ -2,9 +2,10 @@
 <%@include file="../header.jspf" %>
 <div class="container">
     <h2>Cidade</h2>
+    
     <!--Search Form -->
     <form action="/cidade" method="get" id="searchCidade" role="form">
-        <input type="hidden" name="action" value="search">
+        <input type="hidden" id="action" name="action" value="search">
         <div class="form-group col-xs-5">
             <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite a descrição da cidade a procurar"/>                    
         </div>

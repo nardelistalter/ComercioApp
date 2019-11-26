@@ -2,6 +2,7 @@
 <%@include file="../header.jspf" %>
 <div class="container">
     <h2>Estados</h2>
+    
     <!--Search Form -->
     <form action="/estado" method="get" id="searchEstadoForm" role="form">
         <input type="hidden" id="searchAction" name="searchAction" value="searchByName">

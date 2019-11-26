@@ -43,7 +43,7 @@ public class FormaPagamentoServletController extends HttpServlet {
             throws ServletException, IOException {
 
         Permissao p = Valida.acesso(req, resp, "FormaPagamento");
-        
+
         if (p == null) {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login?url=/formaPagamento");
             dispatcher.forward(req, resp);
@@ -62,7 +62,6 @@ public class FormaPagamentoServletController extends HttpServlet {
                             req.setAttribute("message", "Voc� n�o tem permiss�o para consultar.");
                         }
                         forwardList(req, resp, null);
-                        break;
                 }
             } else {
                 List<FormaPagamento> result = null;

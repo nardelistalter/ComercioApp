@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
@@ -16,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,7 +42,9 @@ public class PromocaoServletController extends HttpServlet {
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp)
             throws ServletException, IOException {
+
         Permissao p = Valida.acesso(req, resp, "Promocao");
+
         if (p == null) {
             RequestDispatcher dispatcher
                     = getServletContext().
@@ -54,7 +52,7 @@ public class PromocaoServletController extends HttpServlet {
             dispatcher.forward(req, resp);
         } else {
             req.setAttribute("permissao", p);
-            String action = req.getParameter("action");
+            String action = req.getParameter("search");
             if (action != null) {
                 switch (action) {
                     case "searchById":
@@ -64,7 +62,7 @@ public class PromocaoServletController extends HttpServlet {
                         if (p.getConsultar()) {
                             search(req, resp);
                         } else {
-                            req.setAttribute("message", "Voc� n�o tem permiss�o para consultar.");
+                            req.setAttribute("message", "Você não tem permissão para consultar.");
                         }
                         forwardList(req, resp, null);
                         break;
@@ -74,7 +72,7 @@ public class PromocaoServletController extends HttpServlet {
                 if (p.getConsultar()) {
                     result = daoPromocao.findEntities();
                 } else {
-                    req.setAttribute("message", "Voc� n�o tem permiss�o para consultar.");
+                    req.setAttribute("message", "Você não tem permissão para consultar.");
                 }
                 forwardList(req, resp, result);
             }
@@ -99,10 +97,10 @@ public class PromocaoServletController extends HttpServlet {
         dispatcher.forward(req, resp);
     }
 
-    private void search(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String search = req.getParameter("search");
-        List<Promocao> result = daoPromocao.findEntitiesByField("nome", search);  // buscar por nome
+        Query q = daoPromocao.getEntityManager().createQuery("FROM Promocao p WHERE p.produto.descricao LIKE '%" + search + "%'");
+        List<Promocao> result = q.getResultList();  // buscar por nome
         forwardList(req, resp, result);
     }
 
@@ -127,6 +125,9 @@ public class PromocaoServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
+        if (action == null) {
+            doGet(req, resp);
+        }
         switch (action) {
             case "new":
                 newAction(req, resp);
@@ -156,17 +157,15 @@ public class PromocaoServletController extends HttpServlet {
     private void addAction(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
-            String nome = req.getParameter("nome");
             long idProduto = Long.parseLong(req.getParameter("produto"));
-
             String inicio = req.getParameter("inicio");
             String fim = req.getParameter("fim");
+            Double desconto = Double.parseDouble(req.getParameter("porcentualDesconto"));
+            Boolean soFidelidade = req.getParameter("soFidelidade") != null;
 
             SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
             Date dataInicio = sf.parse(inicio);
             Date dataFim = sf.parse(fim);
-            Boolean soFidelidade = req.getParameter("soFidelidade") != null;
-            Double desconto = Double.parseDouble(req.getParameter("porcentualDesconto"));
 
             Promocao obj = new Promocao(null, dataInicio, dataFim, desconto, soFidelidade, daoProduto.findEntity(idProduto));
             daoPromocao.create(obj);
@@ -182,28 +181,29 @@ public class PromocaoServletController extends HttpServlet {
 
     private void editAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         long id = Integer.valueOf(req.getParameter("id"));
-        String nome = req.getParameter("nome");
-        long idProduto = Long.parseLong(req.getParameter("produto"));
         String inicio = req.getParameter("inicio");
         String fim = req.getParameter("fim");
+        Double desconto = Double.parseDouble(req.getParameter("porcentualDesconto"));
+        Boolean soFidelidade = req.getParameter("soFidelidade") != null;
+        long idProduto = Long.parseLong(req.getParameter("produto"));
 
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+
         Date dataInicio = null;
         try {
             dataInicio = sf.parse(inicio);
         } catch (ParseException ex) {
             Logger.getLogger(PromocaoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         Date dataFim = null;
         try {
             dataFim = sf.parse(fim);
         } catch (ParseException ex) {
             Logger.getLogger(PromocaoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Boolean soFidelidade = req.getParameter("soFidelidade") != null;
-        Double desconto = Double.parseDouble(req.getParameter("porcentualDesconto"));
 
-        Promocao obj = new Promocao(null, dataInicio, dataFim, desconto, soFidelidade, daoProduto.findEntity(idProduto));
+        Promocao obj = new Promocao(id, dataInicio, dataFim, desconto, soFidelidade, daoProduto.findEntity(idProduto));
 
         boolean success = false;
         try {
@@ -214,7 +214,7 @@ public class PromocaoServletController extends HttpServlet {
         }
         String message = null;
         if (success) {
-            message = "A promo��o foi atualizada com sucesso";
+            message = "O registro foi atualizado com sucesso";
         }
         req.setAttribute("id", obj.getId());
         req.setAttribute("message", message);
@@ -229,7 +229,7 @@ public class PromocaoServletController extends HttpServlet {
             daoPromocao.destroy(id);
             confirm = true;
         } catch (Exception ex) {
-            String message = "ERRO: Promoc�o sendo usada por outra entidade.";
+            String message = "ERRO: Promocao sendo usada por outra entidade.";
             req.setAttribute("message", message);
             Logger.getLogger(PromocaoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
