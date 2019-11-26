@@ -1,12 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="../header.jspf" %>
 <div class="container">
-    <h2>Formas de Pagamento</h2>
+    <h2>Cartão Fidelidade</h2>
+
     <!--Search Form -->
-    <form action="/formaPagamento" method="get" id="searchFormaPagamentoForm" role="form">
+    <form action="/cartaoFidelidade" method="get" id="searchCartaoFidelidadeForm" role="form">
         <input type="hidden" id="searchAction" name="searchAction" value="searchByName">
         <div class="form-group-lg col-xs-6">
-            <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite a descrição da forma de pagamento a procurar"/>                    
+            <input type="text" name="search" id="search" class="form-control" required="true" placeholder="Digite o nome do cliente a procurar"/>                    
         </div>
         <button type="submit" class="btn btn-info">
             <span class="glyphicon glyphicon-search"></span> Procurar
@@ -16,7 +17,7 @@
     </form>
 
     <!-- Include Botton -->
-    <form action ="jsp/form-formaPagamento.jsp">            
+    <form action ="jsp/form-cartaoFidelidade.jsp">            
         <c:if test="${permissao.getCriar()}">
             <button type="submit" class="btn btn-primary  btn-md">Novo Cadastro</button> 
         </c:if>
@@ -29,7 +30,7 @@
             ${message}
         </div>
     </c:if> 
-    <form action="/formaPagamento" method="post" id="formaPagamentoForm" role="form" >              
+    <form action="/cartaoFidelidade" method="post" id="cartaoFidelidadeForm" role="form" >              
         <input type="hidden" id="id" name="id">
         <input type="hidden" id="action" name="action">
         <c:choose>
@@ -38,7 +39,9 @@
                     <thead>
                         <tr>
                             <td>#</td>
-                            <td>Descrição</td>
+                            <td>Cliente</td>
+                            <td>Vencimento</td>
+                            <td>limite</td>
                             <td></td>
                         </tr>
                     </thead>
@@ -46,18 +49,21 @@
                         <tr class="${id == obj.id?"info":""}">
                             <td>
                                 <c:if test="${permissao.getAlterar()}">
-                                    <a href="/formaPagamento?id=${obj.id}&searchAction=searchById">${obj.id}</a>
+                                    <a href="/cartaoFidelidade?id=${obj.id}&searchAction=searchById">${obj.id}</a>
                                 </c:if>
                                 <c:if test="${!permissao.getAlterar()}">
                                     ${obj.id}
                                 </c:if>
                             </td>                                    
-                            <td>${obj.descricao}</td>
+                            <td>${obj.funcionario}</td>
+                            <td>${obj.vencimento}</td>
+                            <td>${obj.limite}</td>
                             <td> <td> 
                                 <c:if test="${permissao.getExcluir()}">
                                     <a href="#" id="remove" 
-                                       onclick="document.getElementById('action').value = 'remove';document.getElementById('id').value = '${obj.id}';
-                                               document.getElementById('formaPagamentoForm').submit();"> 
+                                       onclick="document.getElementById('action').value = 'remove';
+                                               document.getElementById('id').value = '${obj.id}';
+                                               document.getElementById('cartaoFidelidadeForm').submit();"> 
                                         <span class="glyphicon glyphicon-trash"/>
                                     </a>
                                 </c:if>

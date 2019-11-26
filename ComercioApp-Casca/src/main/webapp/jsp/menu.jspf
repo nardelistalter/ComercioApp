@@ -1,14 +1,15 @@
 <%-- any content can be specified here e.g.: --%>
 <%@ page pageEncoding="windows-1252" %>
-<a href="/estado">Estados</a> |
+<%-- <a href="/estado">Estados</a> |
 <a href="/cidade">Cidades</a> | 
 <a href="/categoria">Categorias</a> | 
-<a href="/categoriaFuncional">Categorias Funcionais</a> | 
+<a href="/categoriaFuncional">Categorias Funcionais</a> |  --%>
 <a href="/funcionario">Funcionários</a> | 
 <a href="/programa">Programas</a> | 
 <a href="/permissao">Permissões</a> | 
-<a href="/formaPagamento">Formas de Pagamento</a> | 
+<%-- <a href="/formaPagamento">Formas de Pagamento</a> | 
 <a href="/pagamento">Pagamento</a> | 
-<a href="/promocao">Promoção</a> |
+<a href="/promocao">Promoção</a> | --%>
+<a href="/cartaoFidelidade">Cartão Fidelidade</a> |
 <a href="/login">Login/Logoff</a> |
 <a href="/jsp/dados.jsp">Dados</a> 

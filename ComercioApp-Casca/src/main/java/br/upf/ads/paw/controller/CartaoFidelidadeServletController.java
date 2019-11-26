@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
-import br.upf.ads.paw.entidades.FormaPagamento;
+import br.upf.ads.paw.entidades.CartaoFidelidade;
+import br.upf.ads.paw.entidades.Funcionario;
 import br.upf.ads.paw.entidades.Permissao;
 import java.io.IOException;
 import java.util.List;
@@ -23,10 +19,11 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author pavan
  */
-@WebServlet(name = "FormaPagamentoServletController", urlPatterns = {"/formaPagamento"})
-public class FormaPagamentoServletController extends HttpServlet {
+@WebServlet(name = "CartaoFidelidadeServletController", urlPatterns = {"/cartaoFidelidade"})
+public class CartaoFidelidadeServletController extends HttpServlet {
 
-    GenericDao<FormaPagamento> daoFormaPagamento = new GenericDao(FormaPagamento.class);
+    GenericDao<CartaoFidelidade> daoCartaoFidelidade = new GenericDao(CartaoFidelidade.class);
+    GenericDao<Funcionario> daoFuncionario = new GenericDao(Funcionario.class);
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -42,10 +39,10 @@ public class FormaPagamentoServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
 
-        Permissao p = Valida.acesso(req, resp, "FormaPagamento");
+        Permissao p = Valida.acesso(req, resp, "CartaoFidelidade");
 
         if (p == null) {
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login?url=/formaPagamento");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login?url=/cartaoFidelidade");
             dispatcher.forward(req, resp);
         } else {
             req.setAttribute("permissao", p);
@@ -64,9 +61,9 @@ public class FormaPagamentoServletController extends HttpServlet {
                         forwardList(req, resp, null);
                 }
             } else {
-                List<FormaPagamento> result = null;
+                List<CartaoFidelidade> result = null;
                 if (p.getConsultar()) {
-                    result = daoFormaPagamento.findEntities();
+                    result = daoCartaoFidelidade.findEntities();
                 } else {
                     req.setAttribute("message", "Voc� n�o tem permiss�o para consulrar");
                 }
@@ -79,15 +76,15 @@ public class FormaPagamentoServletController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
         long id = Integer.valueOf(req.getParameter("id"));
-        FormaPagamento obj = null;
+        CartaoFidelidade obj = null;
         try {
-            obj = daoFormaPagamento.findEntity(id);
+            obj = daoCartaoFidelidade.findEntity(id);
         } catch (Exception ex) {
-            Logger.getLogger(FormaPagamentoServletController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CartaoFidelidadeServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
         req.setAttribute("obj", obj);
         req.setAttribute("action", "edit");
-        String nextJSP = "/jsp/form-formaPagamento.jsp";
+        String nextJSP = "/jsp/form-cartaoFidelidade.jsp";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
         dispatcher.forward(req, resp);
     }
@@ -95,13 +92,13 @@ public class FormaPagamentoServletController extends HttpServlet {
     private void searchByName(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String search = req.getParameter("search");
-        List<FormaPagamento> result = daoFormaPagamento.findEntitiesByField("descricao", search);  // buscar por nome
+        List<CartaoFidelidade> result = daoCartaoFidelidade.findEntitiesByField("descricao", search);  // buscar por nome
         forwardList(req, resp, result);
     }
 
     private void forwardList(HttpServletRequest req, HttpServletResponse resp, List entityList)
             throws ServletException, IOException {
-        String nextJSP = "/jsp/list-formaPagamento.jsp";
+        String nextJSP = "/jsp/list-cartaoFidelidade.jsp";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
         req.setAttribute("entities", entityList);
         dispatcher.forward(req, resp);
@@ -139,30 +136,41 @@ public class FormaPagamentoServletController extends HttpServlet {
     private void addAction(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
-            String descricao = req.getParameter("descricao");
-
-            FormaPagamento obj = new FormaPagamento(null, descricao);
-            daoFormaPagamento.create(obj);
+            Double vencimento = Double.parseDouble(req.getParameter("vencimento"));
+            Double limite = Double.parseDouble(req.getParameter("limite"));
+            Double fatorConversao = Double.parseDouble(req.getParameter("fatorConversao"));
+            Double qtdPontos = Double.parseDouble(req.getParameter("qtdPontos"));
+            Double senha = Double.parseDouble(req.getParameter("senha"));
+            Funcionario funcionario = daoFuncionario.findEntity(Long.parseLong(req.getParameter("funcionario")));
+            
+            CartaoFidelidade obj = new CartaoFidelidade(null, vencimento, limite, qtdPontos, fatorConversao, senha, funcionario, movimento);
+            daoCartaoFidelidade.create(obj);
             long id = obj.getId();
             req.setAttribute("id", id);
             String message = "Um novo registro foi criado com sucesso.";
             req.setAttribute("message", message);
             doGet(req, resp);
         } catch (Exception ex) {
-            Logger.getLogger(FormaPagamentoServletController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CartaoFidelidadeServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void editAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String descricao = req.getParameter("descricao");
         long id = Integer.valueOf(req.getParameter("id"));
-        FormaPagamento obj = new FormaPagamento(id, descricao);
+        Double vencimento = Double.parseDouble(req.getParameter("vencimento"));
+        Double limite = Double.parseDouble(req.getParameter("limite"));
+        Double fatorConversao = Double.parseDouble(req.getParameter("fatorConversao"));
+        Double qtdPontos = Double.parseDouble(req.getParameter("qtdPontos"));
+        Double senha = Double.parseDouble(req.getParameter("senha"));
+        Funcionario funcionario = daoFuncionario.findEntity(Long.parseLong(req.getParameter("funcionario")));
+        
+        CartaoFidelidade obj = new CartaoFidelidade(id, vencimento, limite, qtdPontos, fatorConversao, senha, funcionario, movimento);
         boolean success = false;
         try {
-            daoFormaPagamento.edit(obj);
+            daoCartaoFidelidade.edit(obj);
             success = true;
         } catch (Exception ex) {
-            Logger.getLogger(FormaPagamentoServletController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CartaoFidelidadeServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
         String message = null;
         if (success) {
@@ -178,10 +186,10 @@ public class FormaPagamentoServletController extends HttpServlet {
         long id = Integer.valueOf(req.getParameter("id"));
         boolean confirm = false;
         try {
-            daoFormaPagamento.destroy(id);
+            daoCartaoFidelidade.destroy(id);
             confirm = true;
         } catch (Exception ex) {
-            Logger.getLogger(FormaPagamentoServletController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CartaoFidelidadeServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (confirm) {
             String message = "O registro foi removido com sucesso.";
