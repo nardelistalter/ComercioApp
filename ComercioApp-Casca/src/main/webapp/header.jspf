@@ -96,7 +96,7 @@
                         </li>
                         <li class="nav-item"><a href="/jsp/form-login.jsp" class="nav-link">Login/Logoff</a></li>                        
                         <li class="nav-item cta cta-colored">
-                            <a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[${session.cesta==null?-9:session.cesta.itens.size()}]
+                            <a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[${sessionScope.cesta==null?0:sessionScope.cesta.itens.size()}]
                             </a>
                         </li>
                     </ul>
