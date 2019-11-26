@@ -52,7 +52,7 @@
                             <td>
                                 <c:if test="${permissao.getAlterar()}">
                                     <a href="/permissao?id=${obj.id}&searchAction=searchById">${obj.id}</a>
-                                </c:if>
+                                </c:if>  
                                 <c:if test="${!permissao.getAlterar()}">
                                     ${obj.id}
                                 </c:if>

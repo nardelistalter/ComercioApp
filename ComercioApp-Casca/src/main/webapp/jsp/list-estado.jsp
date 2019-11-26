@@ -3,7 +3,7 @@
 <div class="container">
     <h2>Estados</h2>
     <!--Search Form -->
-    <form action="/estado" method="get" id="seachEstadoForm" role="form">
+    <form action="/estado" method="get" id="searchEstadoForm" role="form">
         <input type="hidden" id="searchAction" name="searchAction" value="searchByName">
         <div class="form-group col-xs-5">
             <input type="text" name="nome" id="nome" class="form-control" required="true" placeholder="Digite o nome do estado a procurar"/>                    
