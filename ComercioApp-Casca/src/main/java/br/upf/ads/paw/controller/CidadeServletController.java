@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
@@ -45,6 +40,7 @@ public class CidadeServletController extends HttpServlet {
             throws ServletException, IOException {
 
         Permissao p = Valida.acesso(req, resp, "Cidade");
+        
         if (p == null) {
             RequestDispatcher dispatcher
                     = getServletContext().

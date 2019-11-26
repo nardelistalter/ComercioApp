@@ -64,7 +64,7 @@ public class PromocaoServletController extends HttpServlet {
                         if (p.getConsultar()) {
                             search(req, resp);
                         } else {
-                            req.setAttribute("message", "Você não tem permissão para consultar.");
+                            req.setAttribute("message", "Vocï¿½ nï¿½o tem permissï¿½o para consultar.");
                         }
                         forwardList(req, resp, null);
                         break;
@@ -74,7 +74,7 @@ public class PromocaoServletController extends HttpServlet {
                 if (p.getConsultar()) {
                     result = daoPromocao.findEntities();
                 } else {
-                    req.setAttribute("message", "Você não tem permissão para consultar.");
+                    req.setAttribute("message", "Vocï¿½ nï¿½o tem permissï¿½o para consultar.");
                 }
                 forwardList(req, resp, result);
             }
@@ -214,7 +214,7 @@ public class PromocaoServletController extends HttpServlet {
         }
         String message = null;
         if (success) {
-            message = "A promoção foi atualizada com sucesso";
+            message = "A promoï¿½ï¿½o foi atualizada com sucesso";
         }
         req.setAttribute("id", obj.getId());
         req.setAttribute("message", message);
@@ -229,7 +229,7 @@ public class PromocaoServletController extends HttpServlet {
             daoPromocao.destroy(id);
             confirm = true;
         } catch (Exception ex) {
-            String message = "ERRO: Promocão sendo usada por outra entidade.";
+            String message = "ERRO: Promocï¿½o sendo usada por outra entidade.";
             req.setAttribute("message", message);
             Logger.getLogger(PromocaoServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
