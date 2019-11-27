@@ -1,6 +1,7 @@
 package br.upf.ads.paw.entidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -60,6 +61,20 @@ public class CartaoFidelidade implements Serializable {
         this.senha = senha;
         this.cliente = cliente;
         this.movimentos = movimentos;
+    }
+    
+        public CartaoFidelidade(Long id, Integer vencimento, Double limite, Double qtdPontos, Double fatorConversao, Integer senha, Pessoa cliente) {
+        this.id = id;
+        this.vencimento = vencimento;
+        this.limite = limite;
+        this.qtdPontos = qtdPontos;
+        this.fatorConversao = fatorConversao;
+        this.senha = senha;
+        this.cliente = cliente;
+    }
+
+    public CartaoFidelidade(Object object, Double vencimento, Double limite, Double qtdPontos, Double fatorConversao, Double senha, Pessoa cliente, ArrayList<Movimento> movimento) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public Integer getVencimento() {

@@ -55,7 +55,7 @@
                                     ${obj.id}
                                 </c:if>
                             </td>                                    
-                            <td>${obj.funcionario}</td>
+                            <td>${obj.cliente}</td>
                             <td>${obj.vencimento}</td>
                             <td>${obj.limite}</td>
                             <td> <td> 

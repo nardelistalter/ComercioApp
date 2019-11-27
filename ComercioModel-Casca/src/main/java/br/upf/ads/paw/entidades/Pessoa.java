@@ -76,8 +76,6 @@ public abstract class Pessoa implements Serializable {
         this.cep = cep;
     }
 
-    
-
     public String getNome() {
         return nome;
     }

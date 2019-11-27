@@ -2,9 +2,11 @@ package br.upf.ads.paw.controller;
 
 import br.upf.ads.paw.controladores.GenericDao;
 import br.upf.ads.paw.entidades.CartaoFidelidade;
-import br.upf.ads.paw.entidades.Funcionario;
+import br.upf.ads.paw.entidades.Movimento;
 import br.upf.ads.paw.entidades.Permissao;
-import java.io.IOException;
+import br.upf.ads.paw.entidades.Pessoa;
+;import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CartaoFidelidadeServletController extends HttpServlet {
 
     GenericDao<CartaoFidelidade> daoCartaoFidelidade = new GenericDao(CartaoFidelidade.class);
-    GenericDao<Funcionario> daoFuncionario = new GenericDao(Funcionario.class);
+    GenericDao<Pessoa> daoPessoa = new GenericDao(Pessoa.class);
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -138,12 +140,14 @@ public class CartaoFidelidadeServletController extends HttpServlet {
         try {
             Double vencimento = Double.parseDouble(req.getParameter("vencimento"));
             Double limite = Double.parseDouble(req.getParameter("limite"));
-            Double fatorConversao = Double.parseDouble(req.getParameter("fatorConversao"));
+            Double fatorconversao = Double.parseDouble(req.getParameter("fatorconversao"));
             Double qtdPontos = Double.parseDouble(req.getParameter("qtdPontos"));
             Double senha = Double.parseDouble(req.getParameter("senha"));
-            Funcionario funcionario = daoFuncionario.findEntity(Long.parseLong(req.getParameter("funcionario")));
+            Pessoa cliente = daoPessoa.findEntity(Long.parseLong(req.getParameter("cliente")));
+            ArrayList<Movimento> movimento = new ArrayList<>();
+
+            CartaoFidelidade obj = new CartaoFidelidade(null, vencimento, limite, qtdPontos, fatorconversao, senha, cliente, movimento);
             
-            CartaoFidelidade obj = new CartaoFidelidade(null, vencimento, limite, qtdPontos, fatorConversao, senha, funcionario, movimento);
             daoCartaoFidelidade.create(obj);
             long id = obj.getId();
             req.setAttribute("id", id);
@@ -159,12 +163,13 @@ public class CartaoFidelidadeServletController extends HttpServlet {
         long id = Integer.valueOf(req.getParameter("id"));
         Double vencimento = Double.parseDouble(req.getParameter("vencimento"));
         Double limite = Double.parseDouble(req.getParameter("limite"));
-        Double fatorConversao = Double.parseDouble(req.getParameter("fatorConversao"));
+        Double fatorconversao = Double.parseDouble(req.getParameter("fatorconversao"));
         Double qtdPontos = Double.parseDouble(req.getParameter("qtdPontos"));
         Double senha = Double.parseDouble(req.getParameter("senha"));
-        Funcionario funcionario = daoFuncionario.findEntity(Long.parseLong(req.getParameter("funcionario")));
+        Pessoa cliente = daoPessoa.findEntity(Long.parseLong(req.getParameter("cliente")));
+        ArrayList<Movimento> movimento = new ArrayList<>();
         
-        CartaoFidelidade obj = new CartaoFidelidade(id, vencimento, limite, qtdPontos, fatorConversao, senha, funcionario, movimento);
+        CartaoFidelidade obj = new CartaoFidelidade(id, vencimento, limite, qtdPontos, fatorconversao, senha, cliente, movimento);
         boolean success = false;
         try {
             daoCartaoFidelidade.edit(obj);

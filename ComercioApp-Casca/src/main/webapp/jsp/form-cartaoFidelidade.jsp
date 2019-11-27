@@ -9,10 +9,10 @@
         <input type="hidden" id="id" name="id" value="${obj.id}">
         <h2>Cartão Fidelidade</h2>
         <div class="form-group col-xs-12">
-            <label for="funcionario" class="control-label col-xs-6">Cliente:
-                <select name="funcionario" class="form-control">
-                    <c:forEach var="funcionario" items="${listFuncionario}">
-                        <option value="${funcionario.id}" ${funcionario.id == obj.funcionario.id?"selected":""}>${funcionario}</option>
+            <label for="cliente" class="control-label col-xs-6">Cliente:
+                <select name="cliente" class="form-control">
+                    <c:forEach var="cliente" items="${listFuncionario}">
+                        <option value="${cliente.id}" ${cliente.id == obj.cliente.id?"selected":""}>${cliente}</option>
                     </c:forEach>
                 </select>
             </label>
