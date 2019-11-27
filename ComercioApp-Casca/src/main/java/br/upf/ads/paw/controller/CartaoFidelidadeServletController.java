@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleListProperty;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -85,6 +86,7 @@ public class CartaoFidelidadeServletController extends HttpServlet {
             Logger.getLogger(CartaoFidelidadeServletController.class.getName()).log(Level.SEVERE, null, ex);
         }
         req.setAttribute("obj", obj);
+        req.setAttribute("listPessoa", daoPessoa.findEntities());
         req.setAttribute("action", "edit");
         String nextJSP = "/jsp/form-cartaoFidelidade.jsp";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
@@ -123,6 +125,9 @@ public class CartaoFidelidadeServletController extends HttpServlet {
             doGet(req, resp);
         }
         switch (action) {
+            case "new":
+                newAction(req, resp);
+                break;
             case "add":
                 addAction(req, resp);
                 break;
@@ -134,19 +139,29 @@ public class CartaoFidelidadeServletController extends HttpServlet {
                 break;
         }
     }
+    
+    private void newAction(HttpServletRequest req,
+            HttpServletResponse resp)
+            throws ServletException, IOException {
+        String nextJSP = "/jsp/form-cartaoFidelidade.jsp";
+        List<Pessoa> list = daoPessoa.findEntities();
+        req.setAttribute("listPessoa", list);
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+        dispatcher.forward(req, resp);
+    }
 
     private void addAction(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
             Double vencimento = Double.parseDouble(req.getParameter("vencimento"));
             Double limite = Double.parseDouble(req.getParameter("limite"));
-            Double fatorconversao = Double.parseDouble(req.getParameter("fatorconversao"));
+            Double fatorConversao = Double.parseDouble(req.getParameter("fatorConversao"));
             Double qtdPontos = Double.parseDouble(req.getParameter("qtdPontos"));
             Double senha = Double.parseDouble(req.getParameter("senha"));
             Pessoa cliente = daoPessoa.findEntity(Long.parseLong(req.getParameter("cliente")));
-            ArrayList<Movimento> movimento = new ArrayList<>();
+            List<Movimento> movimento = new SimpleListProperty<>();
 
-            CartaoFidelidade obj = new CartaoFidelidade(null, vencimento, limite, qtdPontos, fatorconversao, senha, cliente, movimento);
+            CartaoFidelidade obj = new CartaoFidelidade(null, vencimento, limite, qtdPontos, fatorConversao, senha, cliente, (ArrayList<Movimento>) movimento);
             
             daoCartaoFidelidade.create(obj);
             long id = obj.getId();
@@ -163,13 +178,13 @@ public class CartaoFidelidadeServletController extends HttpServlet {
         long id = Integer.valueOf(req.getParameter("id"));
         Double vencimento = Double.parseDouble(req.getParameter("vencimento"));
         Double limite = Double.parseDouble(req.getParameter("limite"));
-        Double fatorconversao = Double.parseDouble(req.getParameter("fatorconversao"));
+        Double fatorConversao = Double.parseDouble(req.getParameter("fatorConversao"));
         Double qtdPontos = Double.parseDouble(req.getParameter("qtdPontos"));
         Double senha = Double.parseDouble(req.getParameter("senha"));
         Pessoa cliente = daoPessoa.findEntity(Long.parseLong(req.getParameter("cliente")));
-        ArrayList<Movimento> movimento = new ArrayList<>();
+        List<Movimento> movimento = new SimpleListProperty<>();
         
-        CartaoFidelidade obj = new CartaoFidelidade(id, vencimento, limite, qtdPontos, fatorconversao, senha, cliente, movimento);
+        CartaoFidelidade obj = new CartaoFidelidade(id, vencimento, limite, qtdPontos, fatorConversao, senha, cliente, (ArrayList<Movimento>) movimento);
         boolean success = false;
         try {
             daoCartaoFidelidade.edit(obj);

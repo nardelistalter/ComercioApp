@@ -11,32 +11,32 @@
         <div class="form-group col-xs-12">
             <label for="cliente" class="control-label col-xs-6">Cliente:
                 <select name="cliente" class="form-control">
-                    <c:forEach var="cliente" items="${listFuncionario}">
+                    <c:forEach var="cliente" items="${listPessoa}">
                         <option value="${cliente.id}" ${cliente.id == obj.cliente.id?"selected":""}>${cliente}</option>
                     </c:forEach>
                 </select>
             </label>
-            <br></br>
-            <label for="vencimento" class="control-label col-xs-4">Dia de Vencimento:
+            <br><br><br><br>
+            <label for="vencimento" class="control-label col-xs-3">Dia de Vencimento:
                 <input type="text" name="vencimento" id="vencimento" class="form-control" value="${obj.vencimento}" required="true"/>                                   
             </label>
-            <br></br>
-            <label for="limite" class="control-label col-xs-4">Limite:
+            <br><br><br><br>
+            <label for="limite" class="control-label col-xs-3">Limite:
                 <input type="text" name="limite" id="limite" class="form-control" value="${obj.limite}" required="true"/>                                   
             </label>
-            <br></br>
-            <label for="fatorconversao" class="control-label col-xs-4">Fator de Conversão:
-                <input type="text" name="fatorconversao" id="fatorconversao" class="form-control" value="${obj.fatorconversao}" required="true"/>                                   
+            <br><br><br><br>
+            <label for="fatorConversao" class="control-label col-xs-3">Fator de Conversão:
+                <input type="text" name="fatorConversao" id="fatorConversao" class="form-control" value="${obj.fatorConversao}" required="true"/>                                   
             </label>
-            <br></br>
-            <label for="qtdpontos" class="control-label col-xs-4">Qtd de Pontos:
-                <input type="text" name="qtdpontos" id="qtdpontos" class="form-control" value="${obj.qtdpontos}" required="true"/>                                   
+            <br><br><br><br>
+            <label for="qtdPontos" class="control-label col-xs-3">Qtd de Pontos:
+                <input type="text" name="qtdPontos" id="qtdPontos" class="form-control" value="${obj.qtdPontos}" required="true"/>                                   
             </label>
-            <br></br>
-            <label for="senha" class="control-label col-xs-4">Senha:
+            <br><br><br><br>
+            <label for="senha" class="control-label col-xs-3">Senha:
                 <input type="password" name="senha" id="senha" class="form-control" value="${obj.senha}" required="true"/>                                   
             </label>
-            <br></br>
+            <br><br><br><br>
             <button type="submit" class="btn btn-primary  btn-md">Gravar</button> 
         </div>                                                      
     </form>

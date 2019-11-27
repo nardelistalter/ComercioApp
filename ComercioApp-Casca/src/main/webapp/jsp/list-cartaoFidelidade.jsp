@@ -17,7 +17,15 @@
     </form>
 
     <!-- Include Botton -->
-    <form action ="jsp/form-cartaoFidelidade.jsp">            
+    <!--<form action ="jsp/form-cartaoFidelidade.jsp">            
+        <%--<c:if test="${permissao.getCriar()}">
+            <button type="submit" class="btn btn-primary  btn-md">Novo Cadastro</button> 
+        </c:if> --%>
+        <br></br>
+    </form>-->
+    
+        <!-- Include Botton -->
+    <form action ="/cartaoFidelidade?action=new" method="POST">            
         <c:if test="${permissao.getCriar()}">
             <button type="submit" class="btn btn-primary  btn-md">Novo Cadastro</button> 
         </c:if>
